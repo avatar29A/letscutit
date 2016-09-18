@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# IDEA
+.idea/
 # C extensions
 *.so
 
@@ -87,3 +89,6 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Bower
+app/components/
