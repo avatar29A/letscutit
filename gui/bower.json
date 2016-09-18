@@ -1,0 +1,21 @@
+{
+  "name": "letscutit",
+  "homepage": "https://github.com/avatar29A/letscutit",
+  "authors": [
+    "Glebov Boris <avatar29A@gmail.com>"
+  ],
+  "description": "service for cutting mp3 files",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "app/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "lodash": "^4.15.0"
+  }
+}
