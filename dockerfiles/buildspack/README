@@ -1,0 +1,49 @@
+# HOW BUILD IMAGE IN BLUEMIX REGISTER #
+
+Link: https://console.ng.bluemix.net/docs/containers/container_images_building.html
+
+## Requirements ##
+
+1. Setup Docker, Cloud Foundry and Cloud Foundry Plugin
+
+https://console.ng.bluemix.net/docs/containers/container_cli_cfic_install.html
+
+2. Login to Bluemix
+
+```sh
+cf login [-a api.ng.bluemix.net]
+```
+
+cf will request to enter email and password
+
+3. Initalize cf ic
+
+```sh
+cf ic init
+```
+
+and declare Env variables.
+
+4. Create tag into Bluemix's register
+
+```sh
+docker tag <current_image_name_or_ID>:<optional_tag> <private_Bluemix_repository>/<new_image_name>:<optional_tag>
+```
+
+**Example**
+
+```sh
+docker tag training/sinatra registry.DomainName/my_namespace/new_sinatra
+```
+
+5. Build image and push to bluemix
+
+```sh
+cf ic build -t registry.ng.bluemix.net/<private_Bluemix_repository>/<image_name> <Directory with Dockerfile>
+```
+
+**Example**
+
+```sh
+cf ic build -t registry.ng.bluemix.net/mellody/curl curl
+```
