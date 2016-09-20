@@ -9,7 +9,7 @@ Part of the service which is responsible for an User interaction.
 
 ## Install & Run
 
-1. Clone repository
+1 . Clone repository
 
 ```sh
 git clone https://github.com/avatar29A/letscutit
@@ -21,35 +21,29 @@ Go to service directory
 cd letscutit
 ```
 
-2. Install node.js & npm
+2 . Install node.js & npm
 
 **Notes**: *Might be it's required root permissions*.
 
-3. Go to **gui** directory
+3 . Go to **gui** directory
 
 ```sh
 cd gui
 ```
 
-4. Install dependencies from bower's repository
-
-```sh
-bower install
-```
-
-5. Install dependencies from npm's repository
+4 . Install dependencies from npm's repository
 
 ```sh
 npm install
 ```
 
-6. Run gulp
+5 . Run gulp
 
 ```sh
 gulp
 ```
 
-7. Run it
+6 . Run it
 
 ```sh
 npm start
