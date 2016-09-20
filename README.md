@@ -3,10 +3,12 @@ letscut.it
 
 ## Project's structure
 
+```
 /
-    gui
-    api
-    dockerfiles
+    gui/
+    api/
+    dockerfiles/
+```
 
 ### GUI (gui)
 
