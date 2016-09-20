@@ -22,33 +22,28 @@ cd letscutit
 ```
 
 2. Install node.js & npm
-3. Install bower
-
-```sh
-npm install -g bower
-```
 
 **Notes**: *Might be it's required root permissions*.
 
-4. Go to **gui** directory
+3. Go to **gui** directory
 
 ```sh
 cd gui
 ```
 
-5. Install dependencies from bower's repository
+4. Install dependencies from bower's repository
 
 ```sh
 bower install
 ```
 
-6. Install dependencies from npm's repository
+5. Install dependencies from npm's repository
 
 ```sh
 npm install
 ```
 
-7. Run it
+6. Run it
 
 ```sh
 npm start

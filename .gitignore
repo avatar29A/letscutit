@@ -91,7 +91,7 @@ ENV/
 .ropeproject
 
 # Bower
-gui/app/components/
+gui/app/bower_components/
 
 # Node.js
 gui/node_modules/
