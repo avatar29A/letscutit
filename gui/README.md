@@ -5,7 +5,6 @@ Part of the service which is responsible for an User interaction.
 ## Dependencies
 
 1. Node.js & npm
-2. Bower
 
 ## Install & Run
 
