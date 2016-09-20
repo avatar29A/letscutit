@@ -43,7 +43,13 @@ bower install
 npm install
 ```
 
-6. Run it
+6. Run gulp
+
+```sh
+gulp
+```
+
+7. Run it
 
 ```sh
 npm start
