@@ -4,16 +4,16 @@
 
 import {Component, Input} from "@angular/core"
 import {Cutting} from "./model/cutting";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'my-cutting',
-    template: `
-        <h2>{{cutting.title}} details!</h2>
-        <div><label>id: </label>{{cutting.id}}</div>
-       `
+    templateUrl: 'app/cutting/cutting.template.html'
 })
 
 export class CuttingComponent {
     @Input()
     cutting: Cutting;
+
+    constructor(private router: Router) {}
 }
