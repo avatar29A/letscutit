@@ -3,6 +3,7 @@
  */
 
 import {Component} from "@angular/core"
+import * as _ from "lodash"
 
 @Component({
     selector: 'navigation',
@@ -11,3 +12,11 @@ import {Component} from "@angular/core"
 export class NavigationComponent{
     
 }
+
+
+
+function lodashTestSum(collection: [number]) {
+     return _.reduce(collection, (reduct, el) => reduct + el, 0);
+}
+
+console.log(lodashTestSum([1,2,3,4]));
