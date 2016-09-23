@@ -42,6 +42,7 @@
     "gulp-copy": "",
     "gulp-concat": "",
     "gulp-uglify": "",
-    "gulp-rename": ""
+    "gulp-rename": "",
+    "gulp-clean": ""
   }
 }
