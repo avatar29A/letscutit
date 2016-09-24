@@ -7,6 +7,7 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var concat = require('gulp-concat');
 var clean = require('gulp-clean');
+var gulpsync = require('gulp-sync')(gulp);
 
 gulp.task('sass', function () {
     return gulp.src('scss/*.scss')
@@ -31,4 +32,4 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
-gulp.task('default', ['clean', 'sass', 'concat-css', 'bulma']);
+gulp.task('default', gulpsync.sync(['clean', 'sass', 'concat-css', 'bulma']));
