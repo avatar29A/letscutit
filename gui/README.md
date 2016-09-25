@@ -7,14 +7,6 @@ Part of the service which is responsible for an User interaction.
 1. Node.js & npm
 2. gulp
 
-## Prepare
-
-install gulp
-
-```sh
-npm install gulp --save-dev
-```
-
 ## Install & Run
 
 1 . Clone repository
@@ -38,20 +30,25 @@ cd letscutit
 ```sh
 cd gui
 ```
+4 . Install gulp
 
-4 . Install dependencies from npm's repository
+```sh
+npm install gulp --save-dev
+```
+
+5 . Install dependencies from npm's repository
 
 ```sh
 npm install
 ```
 
-5 . Run gulp
+6 . Run gulp
 
 ```sh
 gulp
 ```
 
-6 . Run it
+7 . Run it
 
 ```sh
 npm start
