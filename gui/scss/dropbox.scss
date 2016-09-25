@@ -1,0 +1,11 @@
+.dropbox-container {
+  height: 100%;
+  min-height: 100%;
+ -webkit-transition : border 500ms ease-out;
+ -moz-transition : border 500ms ease-out;
+ -o-transition : border 500ms ease-out;
+}
+
+.dropbox-container:hover{
+  border : 5px solid greenyellow;
+}

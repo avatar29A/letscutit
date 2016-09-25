@@ -4,15 +4,23 @@
 
 import {ModuleWithProviders}  from '@angular/core';
 import {Routes, RouterModule, Route} from '@angular/router';
-
-import {CuttingComponent} from './cutting/cutting.component';
+import {DropboxComponent} from "./dropbox/dropbox.component";
+import {CutterComponent} from "./cutter/cutter.component";
 
 //noinspection TypeScriptValidateTypes
-const appRoutes:Routes = [
+const appRoutes: Routes = [
     {
-        path: 'trends',
-        component: CuttingComponent
+        path: '',
+        component: DropboxComponent
+    },
+    {
+        path: 'new',
+        component: DropboxComponent
+    },
+    {
+        path: 'cutter',
+        component: CutterComponent
     }
 ];
 
-export const routing:ModuleWithProviders = RouterModule.forRoot(appRoutes);
+export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);

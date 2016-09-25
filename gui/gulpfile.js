@@ -8,6 +8,7 @@ var sass = require('gulp-sass');
 var concat = require('gulp-concat');
 var clean = require('gulp-clean');
 var gulpsync = require('gulp-sync')(gulp);
+var watch = require('gulp-watch');
 
 gulp.task('sass', function () {
     return gulp.src('scss/*.scss')
@@ -30,6 +31,11 @@ gulp.task('concat-css', function () {
 gulp.task('clean', function () {
     return gulp.src("css", {read: false})
         .pipe(clean());
+});
+
+gulp.task('stream', function () {
+    return watch("scss/*.scss", { ignoreInitial: false })
+        .pipe(gulp.dest("build"));
 });
 
 gulp.task('default', gulpsync.sync(['clean', 'sass', 'concat-css', 'bulma']));

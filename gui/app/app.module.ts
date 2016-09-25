@@ -6,12 +6,19 @@ import {NgModule, Type} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 
 import {AppComponent} from "./app/app.component";
-import {CuttingComponent} from "./cutting/cutting.component"
 import {NavigationComponent} from "./navigation/navigation.component";
+import {DropboxComponent} from "./dropbox/dropbox.component";
+import {CutterComponent} from "./cutter/cutter.component";
+
+import {routing} from "./app.routing";
+
 
 @NgModule({
-    imports: [BrowserModule],
-    declarations: [AppComponent, CuttingComponent, NavigationComponent],
+    imports: [BrowserModule, routing],
+    declarations: [AppComponent,
+        DropboxComponent,
+        CutterComponent,
+        NavigationComponent],
     bootstrap: [AppComponent]
 })
 

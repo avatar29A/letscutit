@@ -4,9 +4,10 @@
 
 import {Component} from "@angular/core"
 
+
 @Component({
     selector: 'letscutit-app',
-    templateUrl: 'app/app/app.template.html'
+    templateUrl: 'app/app/app.template.html',
 })
 
 export class AppComponent {
