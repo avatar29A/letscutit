@@ -8,6 +8,7 @@ import {Component} from "@angular/core"
 @Component({
     selector: 'letscutit-app',
     templateUrl: 'app/app/app.template.html',
+    styleUrls: ['css/app.css']
 })
 
 export class AppComponent {

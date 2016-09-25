@@ -103,3 +103,4 @@ gui/app/*.map
 gui/app/*/*.js
 gui/app/*/*.map
 gui/css/
+gui/build/

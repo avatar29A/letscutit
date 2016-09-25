@@ -1,5 +1,11 @@
-<div class="dropbox-container">
-    <h1>Drop here</h1>
-    <a routerLink="/cutter">Go to cutter</a>
+<div class="dropbox-container"
+     (dragover)="fileDragHover($event)"
+     (dragleave)="fileDragHover($event)"
+     (drop)="fileSelectHandler($event)"
+>
+    <div class="dropbox-picture">
+        <h1>Drop here</h1>
+    </div>
 </div>
+
 
