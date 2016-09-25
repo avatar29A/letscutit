@@ -1,12 +1,23 @@
 .dropbox-container {
-  height: 100%;
-  min-height:100%;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100%;
+  background-color: #00cc99;
 }
 
-.dropbox-picture {
-  max-width: 50%;
+.dropbox-filectrl {
+  display: none;
+  visibility: hidden;
+}
+
+.dropbox-aim {
+  align-self: flex-start;
+  background-color: gold;
+}
+
+.dropbox-alert {
+  padding-top: 100px;
+  align-self: flex-start;
+  background-color: #00b3ee;
 }
