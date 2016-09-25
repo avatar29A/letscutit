@@ -25,15 +25,16 @@ cd letscutit
 
 **Notes**: *Might be it's required root permissions*.
 
-3 . Go to **gui** directory
+3. Install gulp
+
+```sh
+sudo npm install -g gulp 
+```
+
+4 . Go to **gui** directory
 
 ```sh
 cd gui
-```
-4 . Install gulp
-
-```sh
-npm install gulp --save-dev
 ```
 
 5 . Install dependencies from npm's repository
