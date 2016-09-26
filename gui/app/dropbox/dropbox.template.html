@@ -7,14 +7,28 @@
 >
     <div class="dropbox-vertical-container">
         <div class="dropbox-alert">
-            <div class="dropbox-item    ">
-                Drop your mp3 file to here
+            <div class="dropbox-dropinfo"
+                 [@dropboxAlertHelperState]="state"
+            >
+                Drop your mp3 file to here please
             </div>
         </div>
 
         <div class="dropbox-aim">
             <div class="dropbox-aim-item">
-                <h1 *ngIf="this.selectedFileName != ''">You dropped {{selectedFileName}}</h1>
+                <div *ngIf="state != 'drop'"
+                     (click)="fileOpen()"
+                     class="dropbox-droplogo-container">
+                    <img src="../../images/logo.png" height="500px"/>
+
+                    <div *ngIf="state == 'idle'">
+                        Drop your mp3 file to here please
+                    </div>
+
+                </div>
+
+                <h1 *ngIf="state == 'drop'">You dropped {{selectedFileName}}</h1>
+
             </div>
         </div>
     </div>

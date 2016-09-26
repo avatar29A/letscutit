@@ -3,10 +3,15 @@
  */
 
 import {
-    Component,
+    Component, OnInit,
     trigger, style, state, transition, animate
 } from "@angular/core";
+
 import {Router} from "@angular/router";
+
+const IdleState = 'idle';
+const DragoverState = 'dragover';
+const DropState = 'drop';
 
 @Component(
     {
@@ -15,35 +20,66 @@ import {Router} from "@angular/router";
         styleUrls: ['css/dropbox.css'],
         animations: [
             trigger('dropboxState', [
-                state('idle', style({
+                state(IdleState, style({
                     border: '0px solid white'
                 })),
 
-                state('dragover', style({
+                state(DropState, style({
+                    border: '0px solid white'
+                })),
+
+                state(DragoverState, style({
                     border: '6px solid #66A366'
                 })),
+
                 transition('idle => dragover', animate('200ms ease-in')),
-                transition('dragover => idle', animate('200ms ease-out'))
+                transition('drop => dragover', animate('200ms ease-in')),
+                transition('dragover => idle', animate('200ms ease-out')),
+                transition('dragover => drop', animate('200ms ease-out'))
+            ]),
+            trigger('dropboxAlertHelperState', [
+                state(IdleState, style({
+                    opacity: 0
+                })),
+
+                state(DropState, style({
+                    opacity: 0
+                })),
+
+                state(DragoverState, style({
+                    opacity: 100
+                })),
+                transition('idle => dragover', animate('200ms ease-in')),
+                transition('drop => dragover', animate('200ms ease-in')),
+                transition('dragover => idle', animate('200ms ease-out')),
+                transition('dragover => drop', animate('200ms ease-out'))
             ])
         ]
     }
 )
-export class DropboxComponent {
+export class DropboxComponent implements OnInit {
+
     state:string;
     dragCounter:number;
     selectedFileName:string;
+    selectFileCtrl:HTMLElement;
 
     constructor(private router:Router) {
-        this.state = 'idle';
+        this.state = IdleState;
         this.dragCounter = 0;
         this.selectedFileName = "";
     }
 
-    fileDragEnter(e:DragEvent):void {
-        this.dragCounter += 1;
-        this.state = "dragover";
+    ngOnInit():void {
+        this.selectFileCtrl = document.getElementById('fileselect');
+        this.selectFileCtrl.addEventListener('change', this.fileDragDrop.bind(this), false);
+    }
 
-        console.log("ENTER");
+    fileDragEnter(e:DragEvent):void {
+        if (this.state != DropState) {
+            this.dragCounter += 1;
+            this.state = DragoverState;
+        }
 
         DropboxComponent.stopDragEventPropagation(e);
     }
@@ -52,32 +88,49 @@ export class DropboxComponent {
         this.dragCounter -= 1;
 
         if (this.dragCounter === 0) {
-            this.state = "idle";
+            this.state = IdleState;
         }
 
         DropboxComponent.stopDragEventPropagation(e);
     }
 
     fileDragOver(e:DragEvent):void {
-        this.state = "dragover";
-        DropboxComponent.stopDragEventPropagation(e);
-    }
-
-    fileDragDrop(e:DragEvent):void {
-        // cancel event and hover styling
-        this.resetDragState();
-
-        // fetch FileList object
-        var files = e.dataTransfer.files;
-        for (var i = 0; i < files.length; i++) {
-            this.processMp3File(files[i]);
+        if (this.state != DropState) {
+            this.state = DragoverState;
         }
 
         DropboxComponent.stopDragEventPropagation(e);
     }
 
+    fileDragDrop(e):void {
+        if (this.state == DropState) {
+            DropboxComponent.stopDragEventPropagation(e);
+            return;
+        }
+
+        // cancel event and hover styling
+        this.resetDragState();
+
+        var files = e.target.files || e.dataTransfer.files;
+        this.filesProcess(files);
+
+        this.state = DropState;
+        DropboxComponent.stopDragEventPropagation(e);
+    }
+
+    fileOpen():void {
+        this.selectFileCtrl.click();
+    }
+
+    private filesProcess(files:FileList):void {
+        // fetch FileList object
+        for (var i = 0; i < files.length; i++) {
+            this.processMp3File(files[i]);
+        }
+    }
+
     private resetDragState():void {
-        this.state = 'idle';
+        this.state = IdleState;
         this.dragCounter = 0;
     }
 
