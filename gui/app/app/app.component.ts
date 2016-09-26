@@ -2,7 +2,8 @@
  * Created by warlock on 18.09.16.
  */
 
-import {Component} from "@angular/core"
+import {Component, OnInit} from "@angular/core"
+import now = require("lodash/now");
 
 
 @Component({
@@ -11,6 +12,8 @@ import {Component} from "@angular/core"
     styleUrls: ['css/app.css']
 })
 
-export class AppComponent {
-    title = 'Letscut.it';
+export class AppComponent implements OnInit {
+    ngOnInit():void {
+        console.log("APPLICATION is LAODED");
+    }
 }

@@ -1,25 +1,7 @@
 <nav class="nav">
     <div class="nav-left">
-        <div class="level">
-            <div class="level-left">
-                <div class="level-item">
-                    <a class="nav-item is-brand" routerLink="/"><img src="/images/logo.png" height="128px"
-                                                   alt="Letscut.it" ></a>
-                </div>
-
-                <div class="level-item">
-                    <a class="button is-outlined" routerLink="/new">
-                        <span class="icon">
-                            <i class="fa fa-google-wallet"></i>
-                        </span>
-
-                        <span>Create</span>
-                    </a>
-                </div>
-            </div>
-
-        </div>
-
+        <a class="nav-item is-brand" routerLink="/"><img src="/images/logo.png" height="128px"
+                                                         alt="Letscut.it"></a>
     </div>
 
     <div class="nav-center">
@@ -47,14 +29,13 @@
         </a>
 
        <span class="nav-item">
-            <a class="button is-outlined" data-social-network="Twitter" data-social-action="tweet"
-               data-social-target="http://letscut.it/"
-               href="https://twitter.com/intent/tweet?text=Letscut.it: is modern service for cutting mp3&amp;url=http://letscut.it&amp;via=h-qub">
-              <span class="icon">
-                <i class="fa fa-twitter"></i>
-              </span>
-              <span>Tweet</span>
-            </a>
+             <a class="button is-outlined" routerLink="/new">
+                <span class="icon">
+                    <i class="fa fa-google-wallet"></i>
+                </span>
+
+                <span>Create</span>
+             </a>
       </span>
     </div>
 </nav>

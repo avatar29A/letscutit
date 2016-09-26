@@ -10,7 +10,32 @@
   align-content: stretch; /* Extra space in Cross Axis */
 }
 
-.flexbox-item-grow
-{
-      flex: 1; /* same as flex: 1 1 auto; */
+.flexbox-vertical-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.flexbox-item-grow {
+  flex: 1; /* same as flex: 1 1 auto; */
+}
+
+.flexbox-aligner {
+  border-color: greenyellow;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.flexbox-aligner-item {
+  max-width: 50%;
+}
+
+.flexbox-aligner-item--top {
+  align-self: flex-start;
+}
+
+.flexbox-aligner-item--bottom {
+  align-self: flex-end;
 }
