@@ -1,23 +1,49 @@
 .dropbox-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 100%;
-  background-color: #00cc99;
+  //background-color: #00cc99;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.dropbox-vertical-container {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+}
+
+.dropbox-alert {
+  padding-top: 100px;
+  align-self: center;
+}
+
+.dropbox-aim {
+  //background-color: gold;
+  align-self: center;
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+}
+
+.dropbox-aim-item {
+  align-self: center;
+}
+
+.dropbox-footer-container {
+  align-self: stretch;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.dropbox-footer-item {
+  align-self: center;
 }
 
 .dropbox-filectrl {
   display: none;
   visibility: hidden;
-}
-
-.dropbox-aim {
-  align-self: flex-start;
-  background-color: gold;
-}
-
-.dropbox-alert {
-  padding-top: 100px;
-  align-self: flex-start;
-  background-color: #00b3ee;
 }

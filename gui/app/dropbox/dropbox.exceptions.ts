@@ -10,11 +10,7 @@ declare class ErrorClass implements Error {
 
 class UnsupportedAudioFormatError extends ErrorClass {
     public name = "UnsupportedAudioFormatError";
-    constructor (public message?: string) {
-        if (message) {
-            super(message);
-        }else {
-            super("Unsupported format. Expected mp3 file.");
-        }
+    constructor () {
+         super("Unsupported format. Expected mp3 file.");
     }
 }
