@@ -11,14 +11,10 @@ import {CutterComponent} from "./cutter/cutter.component";
 const appRoutes: Routes = [
     {
         path: '',
-        component: DropboxComponent
+        component: CutterComponent
     },
     {
         path: 'new',
-        component: DropboxComponent
-    },
-    {
-        path: 'cutter',
         component: CutterComponent
     }
 ];

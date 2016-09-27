@@ -17,7 +17,7 @@ const DropState = 'drop';
     {
         selector: 'dropbox',
         templateUrl: 'app/dropbox/dropbox.template.html',
-        styleUrls: ['css/dropbox.css'],
+        styleUrls: ['css/dropbox.component.css'],
         animations: [
             trigger('dropboxState', [
                 state(IdleState, style({
@@ -63,11 +63,13 @@ export class DropboxComponent implements OnInit {
     dragCounter:number;
     selectedFileName:string;
     selectFileCtrl:HTMLElement;
+    router:Router;
 
     constructor(private router:Router) {
         this.state = IdleState;
         this.dragCounter = 0;
         this.selectedFileName = "";
+        this.router = router;
     }
 
     ngOnInit():void {
