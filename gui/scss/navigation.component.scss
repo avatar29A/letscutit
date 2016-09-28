@@ -1,3 +1,17 @@
+$DEFAULT_LOGO_COLOR: #69707a;
+$BLUE_LOGO_COLOR: #2d15e5;
+$BLUE_ALT_LOGO_COLOR: #2815b6;
+
+@font-face {
+    font-family: "Showcard Gothic";
+    src: url("../fonts/SHOWG.TTF") format("truetype");
+}
+
 .underline {
   text-decoration-line: underline;
+}
+
+.logo {
+  font-family: "Showcard Gothic";
+  font-size: large;
 }
