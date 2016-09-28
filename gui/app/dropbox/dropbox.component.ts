@@ -27,7 +27,7 @@ const DropState = 'drop';
                 })),
 
                 state(DragoverState, style({
-                    border: '6px solid #66A366'
+                    border: '6px solid #2815b6'
                 })),
 
                 transition('idle => dragover', animate('200ms ease-in')),

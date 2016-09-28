@@ -4,32 +4,9 @@
      (dragover)="fileDragOver($event)"
      (dragleave)="fileDragLeave($event)"
      (drop)="fileDragDrop($event)"
+     (click)="fileOpen()"
 >
-    <div class="dropbox-vertical-container">
-        <div class="dropbox-alert">
-            <div class="dropbox-dropinfo"
-                 [@dropboxAlertHelperState]="state"
-            >
-                Drop your mp3 file to here please
-            </div>
-        </div>
-
-        <div class="dropbox-aim">
-            <div class="dropbox-aim-item">
-                <div *ngIf="state != 'drop'"
-                     (click)="fileOpen()"
-                     class="dropbox-droplogo-container"
-                >
-
-                </div>
-
-                <h1 *ngIf="state == 'drop'">You dropped {{selectedFileName}}</h1>
-
-            </div>
-        </div>
-    </div>
-
 
 </div>
 
-<input class="dropbox-filectrl" type="file" id="fileselect"/>
+<input class="filectrl" type="file" id="fileselect"/>
