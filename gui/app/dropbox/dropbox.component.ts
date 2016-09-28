@@ -7,8 +7,6 @@ import {
     trigger, style, state, transition, animate
 } from "@angular/core";
 
-import {Router} from "@angular/router";
-
 const IdleState = 'idle';
 const DragoverState = 'dragover';
 const DropState = 'drop';
@@ -63,13 +61,11 @@ export class DropboxComponent implements OnInit {
     dragCounter:number;
     selectedFileName:string;
     selectFileCtrl:HTMLElement;
-    router:Router;
 
-    constructor(private router:Router) {
+    constructor() {
         this.state = IdleState;
         this.dragCounter = 0;
         this.selectedFileName = "";
-        this.router = router;
     }
 
     ngOnInit():void {

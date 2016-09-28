@@ -18,12 +18,8 @@
             <div class="dropbox-aim-item">
                 <div *ngIf="state != 'drop'"
                      (click)="fileOpen()"
-                     class="dropbox-droplogo-container">
-                    <img src="../../images/logo.png" height="500px"/>
-
-                    <div *ngIf="state == 'idle'">
-                        Drop your mp3 file to here please
-                    </div>
+                     class="dropbox-droplogo-container"
+                >
 
                 </div>
 

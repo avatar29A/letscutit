@@ -3,20 +3,14 @@
  */
 
 import {Component} from "@angular/core"
-import * as _ from "lodash"
+import {Router} from "@angular/router"
 
 @Component({
     selector: 'navigation',
-    templateUrl: 'app/navigation/navigation.template.html'
+    templateUrl: 'app/navigation/navigation.template.html',
+    styleUrls: ['css/navigation.component.css']
 })
-export class NavigationComponent{
-    
+export class NavigationComponent {
+
+    constructor(private router:Router) {}
 }
-
-
-
-function lodashTestSum(collection: [number]) {
-     return _.reduce(collection, (reduct, el) => reduct + el, 0);
-}
-
-console.log(lodashTestSum([1,2,3,4]));

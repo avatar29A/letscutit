@@ -9,6 +9,10 @@ import {AppComponent} from "./app/app.component";
 import {NavigationComponent} from "./navigation/navigation.component";
 import {DropboxComponent} from "./dropbox/dropbox.component";
 import {CutterComponent} from "./cutter/cutter.component";
+import {TrendsComponent} from "./trends/trends.component";
+import {ApiComponent} from "./api/api.component";
+import {AboutComponent} from "./about/about.component";
+import {Error404Component} from "./errors/error404.component";
 
 import {routing} from "./app.routing";
 
@@ -18,7 +22,12 @@ import {routing} from "./app.routing";
     declarations: [AppComponent,
         DropboxComponent,
         CutterComponent,
-        NavigationComponent],
+        NavigationComponent,
+        ApiComponent,
+        TrendsComponent,
+        AboutComponent,
+        Error404Component
+    ],
     bootstrap: [AppComponent]
 })
 

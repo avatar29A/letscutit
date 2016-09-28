@@ -1,4 +1,4 @@
-$SUCCESS_ALERT_COLOR: #30B661;
+@import "variables";
 
 .dropbox-container {
   min-height: 100%;
@@ -52,10 +52,10 @@ $SUCCESS_ALERT_COLOR: #30B661;
 
 .dropbox-dropinfo {
   margin-bottom: 20px;
-  color: $SUCCESS_ALERT_COLOR;
-  background-color: #E8F7ED;
+  color: $DROPBOX_SUCCESS_ALERT_COLOR;
+  background-color: $DROPBOX_SUCCESS_ALERT_BACKGROUND;
 
-  border: 1px solid $SUCCESS_ALERT_COLOR;
+  border: 1px solid $DROPBOX_SUCCESS_ALERT_BORDER_COLOR;
   border-radius: 4px;
   padding: 15px;
   z-index: 999;
@@ -67,4 +67,9 @@ $SUCCESS_ALERT_COLOR: #30B661;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  min-width: 600px;
+  min-height: 500px;
+  background: url(../images/logo.png) 100% 100% no-repeat;
+  background-size: cover;
 }
