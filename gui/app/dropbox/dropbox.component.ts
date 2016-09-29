@@ -64,7 +64,6 @@ export class DropboxComponent implements OnInit {
 
     constructor() {
         this.state = IdleState;
-        this.dragCounter = 0;
         this.selectedFileName = "";
     }
 
@@ -73,22 +72,8 @@ export class DropboxComponent implements OnInit {
         this.selectFileCtrl.addEventListener('change', this.fileDragDrop.bind(this), false);
     }
 
-    fileDragEnter(e:DragEvent):void {
-        if (this.state != DropState) {
-            this.dragCounter += 1;
-            this.state = DragoverState;
-        }
-
-        DropboxComponent.stopDragEventPropagation(e);
-    }
-
     fileDragLeave(e:DragEvent):void {
-        this.dragCounter -= 1;
-
-        if (this.dragCounter === 0) {
-            this.state = IdleState;
-        }
-
+        this.state = IdleState;
         DropboxComponent.stopDragEventPropagation(e);
     }
 
