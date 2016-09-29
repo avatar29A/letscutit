@@ -15,7 +15,7 @@ gulp.task('sass', function () {
 });
 
 gulp.task('bulma', function () {
-   return gulp.src('node_modules/bulma/bulma.sass')
+   return gulp.src('scss/bulma/bulma.sass')
        .pipe(sass())
        .pipe(gulp.dest('css'))
 });
