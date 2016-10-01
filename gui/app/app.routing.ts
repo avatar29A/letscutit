@@ -5,7 +5,7 @@
 import {ModuleWithProviders}  from '@angular/core';
 import {Routes, RouterModule, Route} from '@angular/router';
 import {DropboxComponent} from "./dropbox/dropbox.component";
-import {CutterComponent} from "./cutter/cutter.component";
+import {AudioEditorComponent} from "./editor/editor.component";
 import {TrendsComponent} from "./trends/trends.component";
 import {ApiComponent} from "./api/api.component";
 import {AboutComponent} from "./about/about.component";
@@ -15,11 +15,11 @@ import {Error404Component} from "./errors/error404.component"
 const appRoutes:Routes = [
     {
         path: '',
-        component: CutterComponent
+        component: AudioEditorComponent
     },
     {
         path: 'new',
-        component: CutterComponent
+        component: AudioEditorComponent
     },
     {
         path: 'trends',
