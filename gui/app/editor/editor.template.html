@@ -1,1 +1,5 @@
-<dropbox></dropbox>
+<dropbox
+        (eventEmitter)="onDropedFile($event)"
+        *ngIf="state==editorState.Idle"></dropbox>
+
+<div *ngIf="state==editorState.GotFile">{{_selectedFile.name}}</div>
