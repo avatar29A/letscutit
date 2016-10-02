@@ -3,6 +3,9 @@
  */
 
 import {Component, Input} from "@angular/core";
+import { AfterViewInit, ViewChild } from '@angular/core';
+import {AudioWrapper} from "./audio.wrapper";
+import {VisualiserComponent} from "./visualiser/visualiser.component";
 
 enum EditorState {
     Idle,
@@ -12,18 +15,24 @@ enum EditorState {
 @Component({
     selector: 'audio-editor',
     templateUrl: 'app/editor/editor.template.html',
-    styleUrls: []
+    styleUrls: ['css/editor.component.css']
 })
 export class AudioEditorComponent {
-    _selectedFile:File;
+    private _selectedFile:File;
+
+    @ViewChild(VisualiserComponent)
+    private _visualiser:VisualiserComponent;
+
     state:EditorState;
     editorState = EditorState;
+    audio: AudioWrapper;
 
     onDropedFile(file):void {
         this._selectedFile = file;
         this.state = EditorState.GotFile;
 
-        console.log("Selected file: " + this._selectedFile.name);
+        this.audio = new AudioWrapper(this._selectedFile);
+        this.audio.onUpdate(()=>this._visualiser.frames = this.audio.inspector.getFrequencyData())
     }
 
     constructor() {

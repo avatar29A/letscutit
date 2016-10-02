@@ -8,7 +8,6 @@ import {
 } from "@angular/core";
 
 import * as _ from "lodash"
-import EventEmitter = NodeJS.EventEmitter;
 
 const IdleState = 'idle';
 const DragoverState = 'dragover';
@@ -75,11 +74,11 @@ export class DropboxComponent implements OnInit {
     dragCounter:number;
     selectedFile:File;
     selectFileCtrl:HTMLElement;
-    @Output() eventEmitter:EventEmitter;
+    @Output() eventEmitter:EventEmitter<File>;
 
     constructor() {
         this.state = IdleState;
-        this.eventEmitter = new EventEmitter();
+        this.eventEmitter = new EventEmitter<File>();
     }
 
     ngOnInit():void {

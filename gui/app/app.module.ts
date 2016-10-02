@@ -7,8 +7,12 @@ import {BrowserModule} from "@angular/platform-browser";
 
 import {AppComponent} from "./app/app.component";
 import {NavigationComponent} from "./navigation/navigation.component";
-import {DropboxComponent} from "./dropbox/dropbox.component";
+
+// Editor
 import {AudioEditorComponent} from "./editor/editor.component";
+import {DropboxComponent} from "./dropbox/dropbox.component";
+import {VisualiserComponent} from "./editor/visualiser/visualiser.component"
+
 import {TrendsComponent} from "./trends/trends.component";
 import {ApiComponent} from "./api/api.component";
 import {AboutComponent} from "./about/about.component";
@@ -22,6 +26,7 @@ import {routing} from "./app.routing";
     declarations: [AppComponent,
         DropboxComponent,
         AudioEditorComponent,
+        VisualiserComponent,
         NavigationComponent,
         ApiComponent,
         TrendsComponent,
