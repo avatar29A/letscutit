@@ -3,21 +3,20 @@
         *ngIf="state==editorState.Idle">
 </dropbox>
 
-<div class="container">
-    <section class="section" *ngIf="state==editorState.GotFile">
+<div class="container" *ngIf="state==editorState.GotFile">
+    <section class="section">
         <div>{{_selectedFile.name}}</div>
     </section>
 
     <div style="display: flex; flex-direction: column">
         <wave-visualiser></wave-visualiser>
 
-        <audio id="audio" class="audio"></audio>
         <div style="display: flex; flex-direction: row">
             <button class="button is-primary" (click)="audio.play()">Play</button>
             <button class="button" (click)="audio.pause()">Stop</button>
         </div>
 
     </div>
-
-
 </div>
+
+<audio id="audio" class="audio"></audio>

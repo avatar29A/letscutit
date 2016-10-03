@@ -32,7 +32,6 @@ export class AudioEditorComponent {
         this.state = EditorState.GotFile;
 
         this.audio = new AudioWrapper(this._selectedFile);
-        this.audio.onUpdate(()=>this._visualiser.frames = this.audio.inspector.getFrequencyData())
     }
 
     constructor() {

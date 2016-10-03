@@ -6,10 +6,10 @@ import {AudioSlicer} from "./audio.slicer";
 
 export class AudioWrapper {
     private _context:AudioContext;
-    private _audioSource:MediaElementAudioSourceNode;
-
-    private _fileURL:string;
-    private _audioElement:HTMLMediaElement;
+    private _offlineContext:OfflineAudioContext;
+    private _audioBufferSource:AudioBufferSourceNode;
+    private _renderedBuffer:AudioBuffer = null;
+    private _song:AudioBufferSourceNode;
     private _gain:GainNode; // a volume manager
 
     private _inspector:AudioInspector;
@@ -29,39 +29,44 @@ export class AudioWrapper {
 
     constructor(source:File) {
         this._source = source;
+        let fileReader = new FileReader();
 
         // create the AudioContext instance for extracting audio data
         this._context = new AudioContext();
 
-        // Get url for File
-        this._fileURL = URL.createObjectURL(source);
+        fileReader.readAsArrayBuffer(this._source);
+        fileReader.onloadend = (event:any) => {
+            this._context.decodeAudioData(event.target.result, (ab)=> {
+                this._offlineContext = new OfflineAudioContext(ab.numberOfChannels, ab.duration * ab.sampleRate, ab.sampleRate);
+                this._audioBufferSource = this._offlineContext.createBufferSource();
+                this._audioBufferSource.buffer = ab;
+                this._audioBufferSource.connect(this._offlineContext.destination);
+                this._audioBufferSource.start();
 
-        //get audio element
-        this._audioElement = <HTMLMediaElement>document.getElementById("audio");
-        this._audioElement.src = this._fileURL;
-
-        this._audioSource = this._context.createMediaElementSource(this._audioElement);
-
-        // make helpers
-        this._inspector = new AudioInspector(this._context, this._audioSource);
-        this._slicer = new AudioSlicer(this._context, this._audioSource);
-
-        // create instance of GainNode
-        this._gain = this._context.createGain();
-        this._audioSource.connect(this._gain);
-
-        this._gain.connect(this._context.destination);
+                this._offlineContext.startRendering().then((renderedBuffer)=> this._renderedBuffer = renderedBuffer);
+            })
+        }
     }
 
     play() {
-        this._audioElement.play();
+        if (this._song != null) {
+            this.pause()
+        }
+
+        this._song = this._context.createBufferSource();
+        this._song.buffer = this._renderedBuffer;
+
+        this._song.connect(this._context.destination);
+        this._song.start()
     }
 
     pause() {
-        this._audioElement.pause()
+        this._song.stop();
+        this._song.disconnect(this._context.destination);
+        this._song = null;
     }
 
-    onUpdate(handler:Function) {
-        this._audioElement.addEventListener("timeupdate", handler);
+    onUpdate(handler:any) {
+
     }
 }
