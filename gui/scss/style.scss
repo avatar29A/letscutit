@@ -37,3 +37,10 @@ body {
 .loading-item {
   align-self: center;
 }
+
+.loading-progress {
+  border-radius: 0 !important;
+  height: 4px !important;
+  background-color: #77b6ff !important;
+  box-shadow: 0 0 10px rgba(119, 182, 255, 0.7);
+}

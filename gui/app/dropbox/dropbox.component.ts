@@ -29,8 +29,8 @@ const DropErrorState = 'droperror';
                     border: '0px solid white'
                 })),
 
-                state(DragoverState, style({
-                    border: '6px solid #2815b6'
+                state(DragoverState, style({// #77b6ff #2815b6
+                    border: '6px solid #77b6ff'
                 })),
 
                 state(DropErrorState, style({

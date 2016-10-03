@@ -1,13 +1,16 @@
 @import "variables";
 
 .dropbox-container {
-  height: 100%;
+  // Ovverlap all parent divs
+  position: absolute;
+  left: 0;
+  margin-top: -52px;
+  //
 
+  width: 100%;
+  height: 100%;
   background: url(../images/eeyore.png) center center no-repeat;
-  background-size: contain;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+  background-size: auto;
   cursor: pointer;
 }
 
