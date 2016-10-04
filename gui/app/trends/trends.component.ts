@@ -15,6 +15,7 @@ export class TrendsComponent {
     progress:number = 0;
 
     constructor(private busyNotificator:BusyNotificationService) {
+        
     }
 
     startAwait():void {

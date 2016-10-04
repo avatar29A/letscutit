@@ -19,11 +19,13 @@ import {AboutComponent} from "./about/about.component";
 import {Error404Component} from "./errors/error404.component";
 
 import {routing} from "./app.routing";
+import {AppProgressComponent} from "./app/components/app-progress.component";
 
 
 @NgModule({
     imports: [BrowserModule, routing],
     declarations: [AppComponent,
+        AppProgressComponent,
         DropboxComponent,
         AudioEditorComponent,
         VisualiserComponent,
