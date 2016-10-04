@@ -101,6 +101,9 @@ gui/typings/
 gui/app/*.js
 gui/app/*.map
 gui/app/*/*.js
+gui/app/*/*/*.js
 gui/app/*/*.map
+gui/app/*/*/*.map
+
 gui/css/
 gui/build/

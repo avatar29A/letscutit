@@ -1,4 +1,9 @@
-<!--<progress class="progress loading-progress is-info" value="100" max="100"></progress>-->
+<div class="loading-progress-container">
+    <div class="loading-progress"
+         [@busyIndicatorState]="busyState"
+         (@busyIndicatorState.done)="stopBusyAnimation($event)"
+    ></div>
+</div>
 
 <div>
     <section class="hero">

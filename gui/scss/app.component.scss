@@ -1,2 +1,29 @@
+@import "variables";
+
+.loading-progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  opacity: 1;
+}
+
+.loading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: $blue-darker;
+  box-shadow: 0 0 10px rgba(119, 182, 255, 0.7);
+}
+
+.loading-progress-container .is-loading {
+  opacity: 1;
+  -webkit-transition: none;
+  transition: none;
+
+}
+
 
 
