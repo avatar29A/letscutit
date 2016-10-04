@@ -3,7 +3,7 @@
  */
 
 import {Component} from "@angular/core";
-import {BusyNotificationService} from "../app/services/busynotification.service";
+import {BusyNotificationService} from "../app/services/app-notification.service";
 
 @Component({
     selector: 'about',
@@ -12,27 +12,25 @@ import {BusyNotificationService} from "../app/services/busynotification.service"
     "<button class='button is-prime' (click)='set100()'>Set 100</button>"
 })
 export class TrendsComponent {
-    progress:number = 0;
+    progress:number = 15;
 
     constructor(private busyNotificator:BusyNotificationService) {
         
     }
 
     startAwait():void {
-        this.progress += 10;
-        if (this.progress > 100) {
-            this.progress = 0;
-        }
-
-        this.busyNotificator.progressUpTo(this.progress);
+        this.startTask();
     }
 
     stopAwait():void {
         this.progress = 0;
-        this.busyNotificator.busyTurnOff();
     }
 
     set100():void {
         this.busyNotificator.progressUpTo(100);
+    }
+
+    private startTask():void {
+        this.busyNotificator.progressFlash();
     }
 }

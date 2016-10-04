@@ -6,7 +6,7 @@ import {
     Component,
 
 } from "@angular/core"
-import {BusyNotificationService} from "./services/busynotification.service";
+import {BusyNotificationService} from "./services/app-notification.service";
 
 @Component({
     selector: 'letscutit-app',
@@ -15,5 +15,5 @@ import {BusyNotificationService} from "./services/busynotification.service";
     providers: [BusyNotificationService]
 })
 export class AppComponent {
-    progressState:string;
+
 }
