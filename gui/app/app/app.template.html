@@ -1,9 +1,7 @@
-<div class="loading-progress-container">
-    <div class="loading-progress"
-         [@busyIndicatorState]="busyState"
-         (@busyIndicatorState.done)="stopBusyAnimation($event)"
-    ></div>
-</div>
+<div class="loading-progress"
+     id="app-busy-indicator"
+     [@busyIndicatorState]="progressState"
+></div>
 
 <div>
     <section class="hero">
