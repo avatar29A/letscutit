@@ -38,27 +38,28 @@ export class BusyNotificationService {
         this.progressUp10();
     }
 
-    async progressUp10(oldvalue:number = 0):void {
-        await this.progressUpTo(10 + oldvalue);
+    progressUp10(oldvalue:number = 0):Promise<void> {
+        return this.progressUpTo(10 + oldvalue);
     }
 
-    async progressUpTo(progress:number, pause?:number):void {
+    progressUpTo(progress:number, pause?:number):Promise<void> {
         if (pause == null) {
             pause = Pause;
         }
 
         this.applicationBusyTurnOnOffSource.next(new ProgressMessage(progress));
-        await this.delay(pause);
+        return this.delay(pause);
     }
 
-    async progressFlash():void {
-        //await this.progressUp10(10);
-        await  this.progressComplete();
+    progressFlash() {
+        return this.progressComplete();
     }
 
-    async progressComplete():void {
-        await this.progressUpTo(100, 2000);
-        await this.progressUpTo(0, 100);
+    progressComplete() {
+        this.progressUpTo(100, 2000).then(
+            ()=> {
+                this.progressUpTo(0, 100)
+            });
     }
 
     appBusySpinnerShow():void {
@@ -73,7 +74,7 @@ export class BusyNotificationService {
         this.applicationBusyTurnOnOffSource.next(new ResetMessage());
     }
 
-    private delay(ms:number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+    private delay(ms:number):Promise<void> {
+        return new Promise<void>(resolve => setTimeout(resolve, ms));
     }
 }
