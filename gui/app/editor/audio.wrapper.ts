@@ -16,6 +16,11 @@ export class FileRenderedMessage {
     }
 }
 
+export class FileRenderProgressMessage {
+    constructor(progress:number) {
+    }
+}
+
 export class FileProcessingErrorMessage {
     constructor(error:string) {
     }
@@ -63,6 +68,23 @@ export class AudioWrapper {
                 this.audioBufferSource.connect(this.offlineContext.destination);
                 this.audioBufferSource.start();
 
+                // ToDO: convert OfflineAudioBuffer to any because TS don't have definition needed methods.
+                let oac:any = this.offlineContext;
+
+                // listen onstatechange in oder to send current progress sometime:
+                oac.onstatechange = (event) => {
+                    if (oac.state === 'suspended') {
+                        console.log('suspended at = ' + oac.currentTime + ' duration: ' + ab.duration);
+                        oac.suspend(oac.currentTime + 0.1);
+                        oac.resume();
+
+                        //send message with current progress:
+                        this.fileProcessingSource.next(new FileRenderProgressMessage(oac.currentTime * 100 / ab.duration));
+                    }
+                };
+
+                oac.suspend(0.1);
+
                 // rendered audio file to offline buffer:
                 this.offlineContext.startRendering().then((renderedBuffer)=> {
                     // send message, that audio was rendered to offline buffer (and attach rendered data):
@@ -70,6 +92,8 @@ export class AudioWrapper {
 
                     this.renderedBuffer = renderedBuffer
                 });
+
+
             })
         }
     }

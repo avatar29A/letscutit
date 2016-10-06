@@ -3,7 +3,7 @@
  */
 
 import {Component} from "@angular/core";
-import {AudioWrapper, FileRenderedMessage} from "./audio.wrapper";
+import {AudioWrapper, FileRenderedMessage, FileRenderProgressMessage} from "./audio.wrapper";
 import {BusyNotificationService} from "../app/services/app-notification.service";
 
 enum EditorState {
@@ -33,8 +33,6 @@ export class AudioEditorComponent {
     }
 
     onDropedFile(file:File):void {
-        this.busyNotification.progressUpTo(80);
-
         this.busyNotification.appBusySpinnerShow();
 
         this.selectedFile = file;
@@ -48,6 +46,8 @@ export class AudioEditorComponent {
         if(message instanceof FileRenderedMessage) {
             this.busyNotification.appBusySpinnerHide();
             this.busyNotification.progressUpTo(100);
+        }else if(message instanceof  FileRenderProgressMessage) {
+            this.busyNotification.progressUpTo(message.progress);
         }
     }
 }
