@@ -6,7 +6,7 @@ import {
     Component,
     trigger, style, state, transition, animate, group, ChangeDetectorRef
 } from "@angular/core";
-import {BusyNotificationService, IAppProgressMessage, ProgressMessage} from "../services/app-notification.service";
+import {BusyNotificationService, ProgressMessage} from "../services/app-notification.service";
 import {FlashProgressMessage} from "../services/app-notification.service";
 
 @Component({
@@ -57,7 +57,7 @@ export class AppProgressComponent {
         busyNotificationService.applicationBusyTurnOnOff$.subscribe(this.gotNotification.bind(this));
     }
 
-    gotNotification(notify:IAppProgressMessage):void {
+    gotNotification(notify:any):void {
         if ((<ProgressMessage>notify).progress != null) {
             this.upProgress((<ProgressMessage>notify).progress);
         } else if ((<FlashProgressMessage>notify).flash != null) {

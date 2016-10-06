@@ -6,7 +6,7 @@ import {
     Component, ChangeDetectorRef,
 
 } from "@angular/core"
-import {BusyNotificationService, IAppProgressMessage, AppBusySpinnerMessage} from "./services/app-notification.service";
+import {BusyNotificationService, AppBusySpinnerMessage} from "./services/app-notification.service";
 
 @Component({
     selector: 'letscutit-app',
@@ -21,7 +21,7 @@ export class AppComponent {
         busyNotification.applicationBusyTurnOnOff$.subscribe(this.handleBusyNotificationMessages.bind(this));
     }
 
-    private handleBusyNotificationMessages(message:IAppProgressMessage):void {
+    private handleBusyNotificationMessages(message:any):void {
         if ((<AppBusySpinnerMessage>message).isNeedShow == null) {
             return
         }

@@ -2,17 +2,20 @@
  * Created by Warlock on 01.10.2016.
  */
 
-import {Component, Input} from "@angular/core";
-import { AfterViewInit, ViewChild } from '@angular/core';
+import {Component} from "@angular/core";
 import {AudioWrapper, FileRenderedMessage} from "./audio.wrapper";
-import {VisualiserComponent} from "./visualiser/visualiser.component";
-import {BusyNotificationService, IAppProgressMessage, AppBusySpinnerMessage} from "../app/services/app-notification.service";
+import {BusyNotificationService} from "../app/services/app-notification.service";
 
 enum EditorState {
     Idle,
     GotFile
 }
 
+/*
+AudioEditorComponent
+
+Expected audio file and provides methods to modified it.
+ */
 @Component({
     selector: 'audio-editor',
     templateUrl: 'app/editor/editor.template.html',
@@ -20,9 +23,6 @@ enum EditorState {
 })
 export class AudioEditorComponent {
     private selectedFile:File;
-
-    @ViewChild(VisualiserComponent)
-    private visualiser:VisualiserComponent;
 
     state:EditorState;
     editorState = EditorState;
@@ -48,7 +48,6 @@ export class AudioEditorComponent {
         if(message instanceof FileRenderedMessage) {
             this.busyNotification.appBusySpinnerHide();
             this.busyNotification.progressUpTo(100);
-            console.log("compleate 100");
         }
     }
 }

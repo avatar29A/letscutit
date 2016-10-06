@@ -5,33 +5,26 @@
 import {Injectable} from '@angular/core';
 import {Subject}    from 'rxjs/Subject';
 
-export interface IAppProgressMessage {
-}
-
-export class ProgressMessage implements IAppProgressMessage {
+export class ProgressMessage {
     constructor(public progress:number) {
     }
 }
 
-export class FlashProgressMessage implements IAppProgressMessage {
+export class FlashProgressMessage {
     constructor(public flash:number = 0) {
     }
 }
 
-export class AppBusySpinnerMessage implements IAppProgressMessage {
+export class AppBusySpinnerMessage  {
     constructor(public isNeedShow:boolean) {
     }
-}
-
-export class ResetMessage implements IAppProgressMessage {
-
 }
 
 const Pause = 400;
 
 @Injectable()
 export class BusyNotificationService {
-    private applicationBusyTurnOnOffSource = new Subject<IAppProgressMessage>();
+    private applicationBusyTurnOnOffSource = new Subject<any>();
     applicationBusyTurnOnOff$ = this.applicationBusyTurnOnOffSource.asObservable();
 
     busyTurnOn():void {
