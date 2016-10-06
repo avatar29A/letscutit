@@ -31,6 +31,7 @@ export class TrendsComponent {
     }
 
     private startTask():void {
+        this.busyNotificator.appBusySpinnerShow();
         this.busyNotificator.progressFlash();
     }
 }

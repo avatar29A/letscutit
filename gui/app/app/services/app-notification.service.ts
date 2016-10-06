@@ -70,10 +70,6 @@ export class BusyNotificationService {
         this.applicationBusyTurnOnOffSource.next(new AppBusySpinnerMessage(false));
     }
 
-    private progressCompleted():void {
-        this.applicationBusyTurnOnOffSource.next(new ResetMessage());
-    }
-
     private delay(ms:number):Promise<void> {
         return new Promise<void>(resolve => setTimeout(resolve, ms));
     }

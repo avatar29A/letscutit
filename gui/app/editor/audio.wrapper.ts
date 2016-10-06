@@ -1,16 +1,88 @@
-import {AudioInspector} from "./audio.inspector";
-import {AudioSlicer} from "./audio.slicer";
 /**
  * Created by Warlock on 02.10.2016.
  */
 
+import {AudioInspector} from "./audio.inspector";
+import {AudioSlicer} from "./audio.slicer";
+import {Subject}    from 'rxjs/Subject';
+
+export class FileLoadedMessage {
+    constructor(ab:AudioBuffer) {
+    }
+}
+
+export class FileRenderedMessage {
+    constructor(renderedBuffer:AudioBuffer) {
+    }
+}
+
+export class FileProcessingErrorMessage {
+    constructor(error:string) {
+    }
+}
+
+// AudioWrapper
+//
+//  This class wraps binary audio file and provides some methods to manipulate it.
+//  Opportunities:
+//      * Extract PCM
+//      * Extract Frequency and Timing
+//      * Make slices
+//      * Play as whole file as and a sliced part
+//
+//  Also this class provides further interface to emit events:
+//
+//      fileProcessing$
+//  User could subscribe on this, and will await further messages:
+//      * FileLoadedMessage - file was loaded
+//      * FileRenderedMessage - file was rendered. Also contains rendered data
+//      * FileProcessingErrorMessage - if file's processing was aborted, emit this message with error message.
 export class AudioWrapper {
-    private _context:AudioContext;
-    private _offlineContext:OfflineAudioContext;
-    private _audioBufferSource:AudioBufferSourceNode;
-    private _renderedBuffer:AudioBuffer = null;
-    private _song:AudioBufferSourceNode;
-    private _gain:GainNode; // a volume manager
+    // ************
+    // .ctor
+    // ************
+
+    constructor(source:File) {
+        this._source = source;
+        let fileReader = new FileReader();
+
+        // create the AudioContext instance for extracting audio data
+        this.context = new AudioContext();
+
+        fileReader.readAsArrayBuffer(this._source);
+        fileReader.onloadend = (event:any) => {
+            this.context.decodeAudioData(event.target.result, (ab:AudioBuffer)=> {
+                // send message, that AudioBuffer was loaded:
+                this.fileProcessingSource.next(new FileLoadedMessage(ab));
+
+                // create offline audio context to further processing audio:
+                this.offlineContext = new OfflineAudioContext(ab.numberOfChannels, ab.duration * ab.sampleRate, ab.sampleRate);
+
+                this.audioBufferSource = this.offlineContext.createBufferSource();
+                this.audioBufferSource.buffer = ab;
+                this.audioBufferSource.connect(this.offlineContext.destination);
+                this.audioBufferSource.start();
+
+                // rendered audio file to offline buffer:
+                this.offlineContext.startRendering().then((renderedBuffer)=> {
+                    // send message, that audio was rendered to offline buffer (and attach rendered data):
+                    this.fileProcessingSource.next(new FileRenderedMessage(renderedBuffer));
+
+                    this.renderedBuffer = renderedBuffer
+                });
+            })
+        }
+    }
+
+    // ************
+    // Fields
+    // ************
+
+    private context:AudioContext;
+    private offlineContext:OfflineAudioContext;
+    private audioBufferSource:AudioBufferSourceNode;
+    private renderedBuffer:AudioBuffer = null;
+    private song:AudioBufferSourceNode;
 
     private _inspector:AudioInspector;
     get inspector():AudioInspector {
@@ -27,46 +99,32 @@ export class AudioWrapper {
         return this._source;
     }
 
-    constructor(source:File) {
-        this._source = source;
-        let fileReader = new FileReader();
+    // ************
+    // Events
+    // ************
 
-        // create the AudioContext instance for extracting audio data
-        this._context = new AudioContext();
+    private fileProcessingSource = new Subject<any>();
+    fileProcessing$ = this.fileProcessingSource.asObservable();
 
-        fileReader.readAsArrayBuffer(this._source);
-        fileReader.onloadend = (event:any) => {
-            this._context.decodeAudioData(event.target.result, (ab)=> {
-                this._offlineContext = new OfflineAudioContext(ab.numberOfChannels, ab.duration * ab.sampleRate, ab.sampleRate);
-                this._audioBufferSource = this._offlineContext.createBufferSource();
-                this._audioBufferSource.buffer = ab;
-                this._audioBufferSource.connect(this._offlineContext.destination);
-                this._audioBufferSource.start();
-
-                this._offlineContext.startRendering().then((renderedBuffer)=> this._renderedBuffer = renderedBuffer);
-            })
-        }
-    }
+    // ************
+    // Methods
+    // ************
 
     play() {
-        if (this._song != null) {
+        if (this.song != null) {
             this.pause()
         }
 
-        this._song = this._context.createBufferSource();
-        this._song.buffer = this._renderedBuffer;
+        this.song = this.context.createBufferSource();
+        this.song.buffer = this.renderedBuffer;
 
-        this._song.connect(this._context.destination);
-        this._song.start()
+        this.song.connect(this.context.destination);
+        this.song.start()
     }
 
     pause() {
-        this._song.stop();
-        this._song.disconnect(this._context.destination);
-        this._song = null;
-    }
-
-    onUpdate(handler:any) {
-
+        this.song.stop();
+        this.song.disconnect(this.context.destination);
+        this.song = null;
     }
 }
