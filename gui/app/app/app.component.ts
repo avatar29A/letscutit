@@ -3,7 +3,7 @@
  */
 
 import {
-    Component,
+    Component, ChangeDetectorRef,
 
 } from "@angular/core"
 import {BusyNotificationService, IAppProgressMessage, AppBusySpinnerMessage} from "./services/app-notification.service";
@@ -17,7 +17,7 @@ import {BusyNotificationService, IAppProgressMessage, AppBusySpinnerMessage} fro
 export class AppComponent {
     isAwaiterShowed:boolean = false;
 
-    constructor(private busyNotification:BusyNotificationService) {
+    constructor(private busyNotification:BusyNotificationService, private cd: ChangeDetectorRef) {
         busyNotification.applicationBusyTurnOnOff$.subscribe(this.handleBusyNotificationMessages.bind(this));
     }
 
@@ -26,8 +26,7 @@ export class AppComponent {
             return
         }
 
-        console.log("Before: " + this.isAwaiterShowed);
         this.isAwaiterShowed = (<AppBusySpinnerMessage>message).isNeedShow;
-        console.log("Needed: " + this.isAwaiterShowed);
+        this.cd.detectChanges();
     }
 }

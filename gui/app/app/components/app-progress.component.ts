@@ -4,10 +4,9 @@
 
 import {
     Component,
-    trigger, style, state, transition, animate, group
+    trigger, style, state, transition, animate, group, ChangeDetectorRef
 } from "@angular/core";
 import {BusyNotificationService, IAppProgressMessage, ProgressMessage} from "../services/app-notification.service";
-import {ResetMessage} from "../services/app-notification.service";
 import {FlashProgressMessage} from "../services/app-notification.service";
 
 @Component({
@@ -24,7 +23,17 @@ import {FlashProgressMessage} from "../services/app-notification.service";
                 width: '20%'
             })),
 
+            state('progress50', style({
+                width: '50%'
+            })),
+
+            state('progress80', style({
+                width: '80%'
+            })),
+
             transition('* => progress20', animate('0.3s ease-in')),
+            transition('* => progress50', animate('0.3s ease-in')),
+            transition('* => progress80', animate('0.3s ease-in')),
             transition('* => progress100', [
                 group([
                     animate('800ms ease-out', style({
@@ -44,7 +53,7 @@ import {FlashProgressMessage} from "../services/app-notification.service";
 export class AppProgressComponent {
     public progressState:string;
 
-    constructor(private busyNotificationService:BusyNotificationService) {
+    constructor(private busyNotificationService:BusyNotificationService, private cd:ChangeDetectorRef) {
         busyNotificationService.applicationBusyTurnOnOff$.subscribe(this.gotNotification.bind(this));
     }
 
@@ -55,6 +64,8 @@ export class AppProgressComponent {
             console.log('flash');
             this.progressState = "flash";
         }
+
+        this.cd.detectChanges();
     }
 
     upProgress(progress:number):void {

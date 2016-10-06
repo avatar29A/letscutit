@@ -33,7 +33,7 @@ export class AudioEditorComponent {
     }
 
     onDropedFile(file:File):void {
-        this.busyNotification.progressUpTo(20);
+        this.busyNotification.progressUpTo(80);
 
         this.busyNotification.appBusySpinnerShow();
 
