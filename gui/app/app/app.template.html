@@ -1,8 +1,10 @@
 <app-progress></app-progress>
 
-<div>
-    <div *ngIf="isAwaiterShowed" class="await-layer"></div>
+<div *ngIf="isAwaiterShowed" class="await-backlog">
+    <div class="await-layer"></div>
+</div>
 
+<div>
     <section class="hero">
         <div class="hero-head">
             <div class="container">
