@@ -31,14 +31,14 @@ export class VisualiserComponent implements OnInit {
     }
 
     draw() {
-        let drawVisual = requestAnimationFrame(this.draw.bind(this));
+        // let drawVisual = requestAnimationFrame(this.draw.bind(this));
 
         let width = this._holst.width;
         let height = this._holst.height;
 
         let context = this._holstCtx;
 
-        context.fillStyle = 'rgb(200, 200, 200)';
+        context.fillStyle = 'rgb(255, 255, 255)';
         context.fillRect(0, 0, width, height);
 
         context.lineWidth = 2;
@@ -85,7 +85,5 @@ export class VisualiserComponent implements OnInit {
 
         context.lineTo(this._holst.width, this._holst.height / 2);
         context.stroke();
-
-        console.log(averageValues);
     }
 }

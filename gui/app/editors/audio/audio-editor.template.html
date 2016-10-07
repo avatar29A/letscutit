@@ -5,17 +5,19 @@
 
 <div class="container" *ngIf="state==editorState.GotFile">
     <section class="section">
-        <div>{{selectedFile.name}}</div>
-    </section>
-
-    <div style="display: flex; flex-direction: column">
-        <wave-visualiser></wave-visualiser>
 
         <div style="display: flex; flex-direction: row">
-            <button class="button is-primary" (click)="audio.play()">Play</button>
-            <button class="button" (click)="audio.pause()">Stop</button>
-        </div>
+            <div>{{selectedFile.name}}</div>
 
+            <div style="margin-left: 10px;">
+                <button class="button is-primary" (click)="audio.play()">Play</button>
+            </div>
+
+        </div>
+    </section>
+
+    <div style="display: flex; flex-direction: column; align-items: center">
+        <wave-visualiser></wave-visualiser>
     </div>
 </div>
 

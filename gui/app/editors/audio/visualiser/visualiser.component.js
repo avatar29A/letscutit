@@ -31,11 +31,11 @@ var VisualiserComponent = (function () {
         configurable: true
     });
     VisualiserComponent.prototype.draw = function () {
-        var drawVisual = requestAnimationFrame(this.draw.bind(this));
+        // let drawVisual = requestAnimationFrame(this.draw.bind(this));
         var width = this._holst.width;
         var height = this._holst.height;
         var context = this._holstCtx;
-        context.fillStyle = 'rgb(200, 200, 200)';
+        context.fillStyle = 'rgb(255, 255, 255)';
         context.fillRect(0, 0, width, height);
         context.lineWidth = 2;
         context.strokeStyle = 'rgb(0, 0, 0)';
@@ -71,7 +71,6 @@ var VisualiserComponent = (function () {
         }
         context.lineTo(this._holst.width, this._holst.height / 2);
         context.stroke();
-        console.log(averageValues);
     };
     VisualiserComponent = __decorate([
         core_1.Component({
