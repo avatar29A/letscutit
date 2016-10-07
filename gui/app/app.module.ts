@@ -9,9 +9,9 @@ import {AppComponent} from "./app/app.component";
 import {NavigationComponent} from "./navigation/navigation.component";
 
 // Editor
-import {AudioEditorComponent} from "./editor/editor.component";
+
 import {DropboxComponent} from "./dropbox/dropbox.component";
-import {VisualiserComponent} from "./editor/visualiser/visualiser.component"
+
 
 import {TrendsComponent} from "./trends/trends.component";
 import {ApiComponent} from "./api/api.component";
@@ -20,6 +20,8 @@ import {Error404Component} from "./errors/error404.component";
 
 import {routing} from "./app.routing";
 import {AppProgressComponent} from "./app/components/app-progress.component";
+import {AudioEditorComponent} from "./editors/audio/audio-editor.component";
+import {VisualiserComponent} from "./editors/audio/visualiser/visualiser.component";
 
 
 @NgModule({

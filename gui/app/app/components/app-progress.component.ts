@@ -19,6 +19,10 @@ import {FlashProgressMessage} from "../services/app-notification.service";
                 opacity: 1
             })),
 
+            state('prepare', style({
+                width: '5%'
+            })),
+
             state('progress10', style({
                 width: '10%'
             })),
@@ -55,6 +59,7 @@ import {FlashProgressMessage} from "../services/app-notification.service";
                 width: '90%'
             })),
 
+            transition('* => prepare', animate('0.3s ease-in')),
             transition('* => progress10', animate('0.3s ease-in')),
             transition('* => progress20', animate('0.3s ease-in')),
             transition('* => progress30', animate('0.3s ease-in')),
@@ -101,7 +106,10 @@ export class AppProgressComponent {
     upProgress(progress:number):void {
         if (progress <= 0 || progress > 100) {
             this.progressState = "progress0";
-        } else {
+        } if (progress < 10) {
+            this.progressState = "prepare";
+        }
+        else {
             let roundProgressValue = Math.round(progress / 10) * 10;
             this.progressState = "progress" + roundProgressValue;
         }

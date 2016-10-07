@@ -31,6 +31,10 @@ export class BusyNotificationService {
         this.progressUp10();
     }
 
+    prepare():void{
+        this.progressUpTo(5);
+    }
+
     progressUp10(oldvalue:number = 0):Promise<void> {
         return this.progressUpTo(10 + oldvalue);
     }
