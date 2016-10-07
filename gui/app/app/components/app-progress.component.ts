@@ -19,21 +19,51 @@ import {FlashProgressMessage} from "../services/app-notification.service";
                 opacity: 1
             })),
 
+            state('progress10', style({
+                width: '10%'
+            })),
+
             state('progress20', style({
                 width: '20%'
+            })),
+
+            state('progress30', style({
+                width: '30%'
+            })),
+
+            state('progress40', style({
+                width: '40%'
             })),
 
             state('progress50', style({
                 width: '50%'
             })),
 
+            state('progress60', style({
+                width: '60%'
+            })),
+
+            state('progress70', style({
+                width: '70%'
+            })),
+
             state('progress80', style({
                 width: '80%'
             })),
 
+            state('progress90', style({
+                width: '90%'
+            })),
+
+            transition('* => progress10', animate('0.3s ease-in')),
             transition('* => progress20', animate('0.3s ease-in')),
+            transition('* => progress30', animate('0.3s ease-in')),
+            transition('* => progress40', animate('0.3s ease-in')),
             transition('* => progress50', animate('0.3s ease-in')),
+            transition('* => progress60', animate('0.3s ease-in')),
+            transition('* => progress70', animate('0.3s ease-in')),
             transition('* => progress80', animate('0.3s ease-in')),
+            transition('* => progress90', animate('0.3s ease-in')),
             transition('* => progress100', [
                 group([
                     animate('800ms ease-out', style({

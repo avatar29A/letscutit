@@ -7,22 +7,22 @@ import {AudioSlicer} from "./audio.slicer";
 import {Subject}    from 'rxjs/Subject';
 
 export class FileLoadedMessage {
-    constructor(ab:AudioBuffer) {
+    constructor(public ab:AudioBuffer) {
     }
 }
 
 export class FileRenderedMessage {
-    constructor(renderedBuffer:AudioBuffer) {
+    constructor(public renderedBuffer:AudioBuffer) {
     }
 }
 
 export class FileRenderProgressMessage {
-    constructor(progress:number) {
+    constructor(public progress:number) {
     }
 }
 
 export class FileProcessingErrorMessage {
-    constructor(error:string) {
+    constructor(public error:string) {
     }
 }
 

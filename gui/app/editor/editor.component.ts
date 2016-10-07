@@ -47,7 +47,9 @@ export class AudioEditorComponent {
             this.busyNotification.appBusySpinnerHide();
             this.busyNotification.progressUpTo(100);
         }else if(message instanceof  FileRenderProgressMessage) {
-            this.busyNotification.progressUpTo(message.progress);
+            let progressMessage = <FileRenderProgressMessage>message;
+            console.log(message);
+            this.busyNotification.progressUpTo(progressMessage.progress);
         }
     }
 }
