@@ -19,12 +19,12 @@ var VisualiserComponent = (function () {
         this._holst = document.getElementById('holst');
         this._holstCtx = this._holst.getContext("2d");
     };
-    Object.defineProperty(VisualiserComponent.prototype, "frames", {
+    Object.defineProperty(VisualiserComponent.prototype, "buffer", {
         get: function () {
             return this._data;
         },
-        set: function (data) {
-            this._data = data;
+        set: function (ab) {
+            this._data = ab;
             this.draw();
         },
         enumerable: true,
@@ -34,18 +34,44 @@ var VisualiserComponent = (function () {
         var drawVisual = requestAnimationFrame(this.draw.bind(this));
         var width = this._holst.width;
         var height = this._holst.height;
-        this._holstCtx.clearRect(0, 0, width, height);
-        this._holstCtx.fillStyle = 'rgb(0, 0, 0)';
-        this._holstCtx.fillRect(0, 0, width, height);
-        var barWidth = (width / this.frames.length) * 2.5;
-        var barHeight;
+        var context = this._holstCtx;
+        context.fillStyle = 'rgb(200, 200, 200)';
+        context.fillRect(0, 0, width, height);
+        context.lineWidth = 2;
+        context.strokeStyle = 'rgb(0, 0, 0)';
+        // distance between to points (scale is equal an one second):
+        var distance = (width * 1.0) / this.buffer.duration;
+        var channel0 = this.buffer.getChannelData(0);
+        var frameBound = 0;
+        var frameSumValue = 0;
+        var drownFrameAmount = 0;
+        var averageValues = [];
         var x = 0;
-        for (var i = 0; i < this.frames.length; i++) {
-            barHeight = this.frames[i] / 2;
-            this._holstCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
-            this._holstCtx.fillRect(x, height - barHeight / 2, barWidth, barHeight);
-            x += barWidth + 1;
+        context.beginPath();
+        for (var i = 0; i < channel0.length; i++) {
+            frameBound += 1;
+            frameSumValue += channel0[i];
+            // Draw frame. Frame's value is equal average sum whole samples.
+            if (frameBound === this.buffer.sampleRate - 1) {
+                var frameAverageValue = (frameSumValue / this.buffer.sampleRate) * 100000;
+                averageValues.push(frameAverageValue);
+                var y = frameAverageValue + height / 2;
+                if (drownFrameAmount === 0) {
+                    context.moveTo(x, y);
+                }
+                else {
+                    context.lineTo(x, y);
+                }
+                drownFrameAmount += 1;
+                x += distance;
+                // reset
+                frameBound = 0;
+                frameSumValue = 0;
+            }
         }
+        context.lineTo(this._holst.width, this._holst.height / 2);
+        context.stroke();
+        console.log(averageValues);
     };
     VisualiserComponent = __decorate([
         core_1.Component({

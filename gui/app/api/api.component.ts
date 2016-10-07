@@ -9,5 +9,5 @@ import {Component} from "@angular/core";
     template: "<h1>API</h1>"
 })
 export class ApiComponent {
-
+    
 }

@@ -15,7 +15,7 @@ export class FlashProgressMessage {
     }
 }
 
-export class AppBusySpinnerMessage  {
+export class AppBusySpinnerMessage {
     constructor(public isNeedShow:boolean) {
     }
 }
@@ -27,18 +27,22 @@ export class BusyNotificationService {
     private applicationBusyTurnOnOffSource = new Subject<any>();
     applicationBusyTurnOnOff$ = this.applicationBusyTurnOnOffSource.asObservable();
 
+    //
     busyTurnOn():void {
         this.progressUp10();
     }
 
-    prepare():void{
+    //
+    prepare():void {
         this.progressUpTo(5);
     }
 
+    //
     progressUp10(oldvalue:number = 0):Promise<void> {
         return this.progressUpTo(10 + oldvalue);
     }
 
+    //
     progressUpTo(progress:number, pause?:number):Promise<void> {
         if (pause == null) {
             pause = Pause;
@@ -48,21 +52,26 @@ export class BusyNotificationService {
         return this.delay(pause);
     }
 
+    // Just run progress animation from 0 to 100
     progressFlash() {
-        return this.progressComplete();
-    }
-
-    progressComplete() {
         this.progressUpTo(100, 2000).then(
             ()=> {
                 this.progressUpTo(0, 100)
             });
     }
 
+    // Invoke when task was done. Hide spinner and progress bar up to 100%.
+    progressComplete() {
+        this.appBusySpinnerHide();
+        this.progressUpTo(100);
+    }
+
+    // Show overlay with 'wait-image'
     appBusySpinnerShow():void {
         this.applicationBusyTurnOnOffSource.next(new AppBusySpinnerMessage(true));
     }
 
+    // Hide overlay with 'wait-image'
     appBusySpinnerHide():void {
         this.applicationBusyTurnOnOffSource.next(new AppBusySpinnerMessage(false));
     }

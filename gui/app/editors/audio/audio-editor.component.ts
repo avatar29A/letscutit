@@ -2,10 +2,11 @@
  * Created by Warlock on 01.10.2016.
  */
 
-import {Component} from "@angular/core";
+import {Component, ViewChild} from "@angular/core";
 import {IAudioWrapper} from "../../core/audio/audiowrapper.abstract";
 import {BusyNotificationService} from "../../app/services/app-notification.service";
 import {FileRenderedMessage, FileRenderProgressMessage, ModernAudioWrapper} from "../../core/audio/audiowrapper.modern";
+import {VisualiserComponent} from "./visualiser/visualiser.component";
 
 
 enum EditorState {
@@ -14,9 +15,9 @@ enum EditorState {
 }
 
 /*
-AudioEditorComponent
+ AudioEditorComponent
 
-Expected audio file and provides methods to modified it.
+ Expected audio file and provides methods to modified it.
  */
 @Component({
     selector: 'audio-editor',
@@ -26,11 +27,15 @@ Expected audio file and provides methods to modified it.
 export class AudioEditorComponent {
     private selectedFile:File;
 
+    @ViewChild(VisualiserComponent)
+    private visualiser:VisualiserComponent;
+
     state:EditorState;
     editorState = EditorState;
     audio:IAudioWrapper;
+    audioBuffer:AudioBuffer;
 
-    constructor(private busyNotification: BusyNotificationService) {
+    constructor(private busyNotification:BusyNotificationService) {
         this.state = EditorState.Idle;
     }
 
@@ -42,6 +47,7 @@ export class AudioEditorComponent {
 
         this.audio = new ModernAudioWrapper(this.selectedFile);
         this.audio.fileProcessing$.subscribe(this.handleAudioProcessingMessage.bind(this));
+
         this.startAudioFileProcessing();
     }
 
@@ -49,14 +55,28 @@ export class AudioEditorComponent {
     private startAudioFileProcessing():void {
         this.busyNotification.prepare();
     }
-    
+
     private handleAudioProcessingMessage(message:any):void {
-        if(message instanceof FileRenderedMessage) {
-            this.busyNotification.appBusySpinnerHide();
-            this.busyNotification.progressUpTo(100);
-        }else if(message instanceof  FileRenderProgressMessage) {
+        if (message instanceof FileRenderedMessage) {
+            let renderedMessage = <FileRenderedMessage>message;
+            this.onReceivedAudioData(renderedMessage.renderedBuffer);
+
+            return;
+        }
+
+        if (message instanceof FileRenderProgressMessage) {
             let progressMessage = <FileRenderProgressMessage>message;
             this.busyNotification.progressUpTo(progressMessage.progress);
+
+            return;
         }
+    }
+
+    // Invoke when we received rendered audio data from AudioWrapper
+    private onReceivedAudioData(ab:AudioBuffer):void {
+        this.busyNotification.progressComplete();
+
+        this.audioBuffer = ab;
+        this.visualiser.buffer = ab;
     }
 }

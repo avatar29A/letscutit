@@ -21,7 +21,7 @@ export class FileRenderProgressMessage {
 }
 
 export class FileProcessingErrorMessage {
-    constructor(public error:string) {
+    constructor(public error:any) {
     }
 }
 
@@ -88,7 +88,7 @@ export class ModernAudioWrapper implements IAudioWrapper {
         this.startListeningProgress(this.offlineContext, ab);
 
         // rendered audio file to offline buffer:
-        this.offlineContext.startRendering().then((renderedBuffer)=> {
+        this.offlineContext.startRendering().then((renderedBuffer:AudioBuffer)=> {
             // send message, that audio was rendered to offline buffer (and attach rendered data):
             this.fileProcessingSource.next(new FileRenderedMessage(renderedBuffer));
             this.renderedBuffer = renderedBuffer
@@ -107,7 +107,6 @@ export class ModernAudioWrapper implements IAudioWrapper {
         // listen onstatechange in oder to send current progress sometime:
         oac.onstatechange = (event) => {
             if (oac.state === 'suspended') {
-                console.log('suspended at = ' + oac.currentTime + ' duration: ' + ab.duration);
                 oac.suspend(oac.currentTime + 0.1);
                 oac.resume();
 
@@ -125,8 +124,7 @@ export class ModernAudioWrapper implements IAudioWrapper {
 
     //onDecodedError invokes if file decoding was aborted.
     private onDecodedError(error):void {
-        //ToDo: need to generate message with error. Also need to declare type annotation for argument 'error'
-        console.log("File decoding was aborted with error: " + error);
+        this.fileProcessingSource.next(new FileProcessingErrorMessage(error));
     }
 
     // ************
