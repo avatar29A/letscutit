@@ -3,8 +3,9 @@
  */
 
 import {Component} from "@angular/core";
-import {AudioWrapper, FileRenderedMessage, FileRenderProgressMessage} from "./audio.wrapper";
+import {ModernAudioWrapper, FileRenderedMessage, FileRenderProgressMessage} from "../core/audio/audiowrapper.modern";
 import {BusyNotificationService} from "../app/services/app-notification.service";
+import {IAudioWrapper} from "../core/audio/audiowrapper.abstract";
 
 enum EditorState {
     Idle,
@@ -26,7 +27,7 @@ export class AudioEditorComponent {
 
     state:EditorState;
     editorState = EditorState;
-    audio:AudioWrapper;
+    audio:IAudioWrapper;
 
     constructor(private busyNotification: BusyNotificationService) {
         this.state = EditorState.Idle;
@@ -38,7 +39,7 @@ export class AudioEditorComponent {
         this.selectedFile = file;
         this.state = EditorState.GotFile;
 
-        this.audio = new AudioWrapper(this.selectedFile);
+        this.audio = new ModernAudioWrapper(this.selectedFile);
         this.audio.fileProcessing$.subscribe(this.handleAudioProcessingMessage.bind(this));
     }
 
@@ -48,7 +49,6 @@ export class AudioEditorComponent {
             this.busyNotification.progressUpTo(100);
         }else if(message instanceof  FileRenderProgressMessage) {
             let progressMessage = <FileRenderProgressMessage>message;
-            console.log(message);
             this.busyNotification.progressUpTo(progressMessage.progress);
         }
     }
