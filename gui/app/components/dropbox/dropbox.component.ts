@@ -17,8 +17,8 @@ const DropErrorState = 'droperror';
 @Component(
     {
         selector: 'dropbox',
-        templateUrl: 'app/dropbox/dropbox.template.html',
-        styleUrls: ['css/dropbox.component.css'],
+        templateUrl: 'app/components/dropbox/dropbox.template.html',
+        styleUrls: ['app/components/dropbox/dropbox.component.css'],
         animations: [
             trigger('dropboxState', [
                 state(IdleState, style({

@@ -6,12 +6,13 @@ import {
     Component, ChangeDetectorRef,
 
 } from "@angular/core"
-import {BusyNotificationService, AppBusySpinnerMessage} from "./services/app-notification.service";
+import {BusyNotificationService, AppBusySpinnerMessage} from "../../services/app/appbusy-notification.service";
+
 
 @Component({
     selector: 'letscutit-app',
-    templateUrl: 'app/app/app.template.html',
-    styleUrls: ['css/app.component.css'],
+    templateUrl: 'app/pages/app/app.template.html',
+    styleUrls: ['app/pages/app/app.component.css'],
     providers: [BusyNotificationService]
 })
 export class AppComponent {

@@ -6,12 +6,15 @@ import {
     Component,
     trigger, style, state, transition, animate, group, ChangeDetectorRef
 } from "@angular/core";
-import {BusyNotificationService, ProgressMessage} from "../services/app-notification.service";
-import {FlashProgressMessage} from "../services/app-notification.service";
+import {
+    BusyNotificationService, ProgressMessage,
+    FlashProgressMessage
+} from "../../services/app/appbusy-notification.service";
+
 
 @Component({
     selector: 'app-progress',
-    styleUrls: ['css/app-progress.component.css'],
+    styleUrls: ['app/components/app/app-progress.component.css'],
     animations: [
         trigger('progressAnimation', [
             state('progress0', style({

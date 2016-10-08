@@ -3,7 +3,8 @@
  */
 
 import {Component} from "@angular/core";
-import {BusyNotificationService} from "../app/services/app-notification.service";
+import {BusyNotificationService} from "../../services/app/appbusy-notification.service";
+
 
 @Component({
     selector: 'about',

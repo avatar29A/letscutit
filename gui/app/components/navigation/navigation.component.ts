@@ -7,8 +7,8 @@ import {Router} from "@angular/router"
 
 @Component({
     selector: 'navigation',
-    templateUrl: 'app/navigation/navigation.template.html',
-    styleUrls: ['css/navigation.component.css']
+    templateUrl: 'app/components/navigation/navigation.template.html',
+    styleUrls: ['app/components/navigation/navigation.component.css']
 })
 export class NavigationComponent {
 

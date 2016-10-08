@@ -3,10 +3,14 @@
  */
 
 import {Component, ViewChild} from "@angular/core";
-import {IAudioWrapper} from "../../core/audio/audiowrapper.abstract";
-import {BusyNotificationService} from "../../app/services/app-notification.service";
-import {FileRenderedMessage, FileRenderProgressMessage, ModernAudioWrapper} from "../../core/audio/audiowrapper.modern";
-import {VisualiserComponent} from "./visualiser/visualiser.component";
+import {VisualiserComponent} from "../../../components/editors/audio/visualiser.component";
+import {IAudioWrapper} from "../../../core/audio/audiowrapper.abstract";
+import {BusyNotificationService} from "../../../services/app/appbusy-notification.service";
+import {
+    ModernAudioWrapper, FileRenderedMessage,
+    FileRenderProgressMessage
+} from "../../../core/audio/audiowrapper.modern";
+
 
 
 enum EditorState {
@@ -21,8 +25,8 @@ enum EditorState {
  */
 @Component({
     selector: 'audio-editor',
-    templateUrl: 'app/editors/audio/audio-editor.template.html',
-    styleUrls: ['css/audio-editor.component.css']
+    templateUrl: 'app/pages/editors/audio/audio-editor.template.html',
+    styleUrls: ['app/pages/editors/audio/audio-editor.component.css']
 })
 export class AudioEditorComponent {
     private selectedFile:File;

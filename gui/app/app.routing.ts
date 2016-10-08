@@ -4,11 +4,12 @@
 
 import {ModuleWithProviders}  from '@angular/core';
 import {Routes, RouterModule, Route} from '@angular/router';
-import {TrendsComponent} from "./trends/trends.component";
-import {ApiComponent} from "./api/api.component";
-import {AboutComponent} from "./about/about.component";
 import {Error404Component} from "./errors/error404.component"
-import {AudioEditorComponent} from "./editors/audio/audio-editor.component";
+import {AudioEditorComponent} from "./pages/editors/audio/audio-editor.component";
+import {TrendsComponent} from "./pages/trends/trends.component";
+import {ApiComponent} from "./pages/api/api.component";
+import {AboutComponent} from "./pages/about/about.component";
+
 
 //noinspection TypeScriptValidateTypes
 const appRoutes:Routes = [

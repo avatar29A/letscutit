@@ -168,7 +168,6 @@ export class ModernAudioWrapper implements IAudioWrapper {
 
     pause() {
         this.song.stop();
-        this.song.disconnect(this.context.destination);
         this.song = null;
     }
 }

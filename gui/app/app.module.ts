@@ -5,23 +5,20 @@
 import {NgModule, Type} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 
-import {AppComponent} from "./app/app.component";
-import {NavigationComponent} from "./navigation/navigation.component";
 
 // Editor
 
-import {DropboxComponent} from "./dropbox/dropbox.component";
-
-
-import {TrendsComponent} from "./trends/trends.component";
-import {ApiComponent} from "./api/api.component";
-import {AboutComponent} from "./about/about.component";
 import {Error404Component} from "./errors/error404.component";
-
 import {routing} from "./app.routing";
-import {AppProgressComponent} from "./app/components/app-progress.component";
-import {AudioEditorComponent} from "./editors/audio/audio-editor.component";
-import {VisualiserComponent} from "./editors/audio/visualiser/visualiser.component";
+import {AppComponent} from "./pages/app/app.component";
+import {NavigationComponent} from "./components/navigation/navigation.component";
+import {DropboxComponent} from "./components/dropbox/dropbox.component";
+import {AudioEditorComponent} from "./pages/editors/audio/audio-editor.component";
+import {ApiComponent} from "./pages/api/api.component";
+import {TrendsComponent} from "./pages/trends/trends.component";
+import {AboutComponent} from "./pages/about/about.component";
+import {AppProgressComponent} from "./components/app/app-progress.component";
+import {VisualiserComponent} from "./components/editors/audio/visualiser.component";
 
 
 @NgModule({

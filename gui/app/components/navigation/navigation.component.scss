@@ -1,8 +1,8 @@
-@import "variables";
+@import "../../../scss/variables";
 
 @font-face {
     font-family: "Showcard Gothic";
-    src: url("../fonts/SHOWG.TTF") format("truetype");
+    src: url("../../../fonts/SHOWG.TTF") format("truetype");
 }
 
 .underline {
