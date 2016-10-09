@@ -4,25 +4,36 @@
 import {Subject}    from 'rxjs/Subject';
 import {IAudioWrapper} from "./audiowrapper.abstract";
 import {Observable} from "rxjs/Rx";
+import Timer = NodeJS.Timer;
 
 export class FileLoadedMessage {
-    constructor(public ab:AudioBuffer) {
+    constructor(public ab: AudioBuffer) {
     }
 }
 
 export class FileRenderedMessage {
-    constructor(public renderedBuffer:AudioBuffer) {
+    constructor(public renderedBuffer: AudioBuffer) {
     }
 }
 
 export class FileRenderProgressMessage {
-    constructor(public progress:number) {
+    constructor(public progress: number) {
     }
 }
 
 export class FileProcessingErrorMessage {
-    constructor(public error:any) {
+    constructor(public error: any) {
     }
+}
+
+export class FilePlayedMessage {
+    constructor(public currentTime: number) {
+
+    }
+}
+
+export class FilePlayEndedMessage {
+
 }
 
 // AudioWrapper
@@ -52,7 +63,7 @@ export class ModernAudioWrapper implements IAudioWrapper {
     // .ctor
     // ************
 
-    constructor(source:File) {
+    constructor(source: File) {
         this._source = source;
         let fileReader = new FileReader();
 
@@ -64,7 +75,7 @@ export class ModernAudioWrapper implements IAudioWrapper {
     }
 
     //onFileLoaded invokes processing, after file was loaded.
-    private onFileLoaded(event:any):void {
+    private onFileLoaded(event: any): void {
         this.context.decodeAudioData(event.target.result,
             this.onDecodedSuccessfull.bind(this),
             this.onDecodedError.bind(this));
@@ -72,7 +83,7 @@ export class ModernAudioWrapper implements IAudioWrapper {
 
     //onDecodedSuccessfull invokes after file was successfully decoded.
     //Otherwise will be invoked onDecodedError method.
-    private onDecodedSuccessfull(ab:AudioBuffer):void {
+    private onDecodedSuccessfull(ab: AudioBuffer): void {
         // send message, that AudioBuffer was loaded:
         this.fileProcessingSource.next(new FileLoadedMessage(ab));
 
@@ -88,7 +99,7 @@ export class ModernAudioWrapper implements IAudioWrapper {
         this.startListeningProgress(this.offlineContext, ab);
 
         // rendered audio file to offline buffer:
-        this.offlineContext.startRendering().then((renderedBuffer:AudioBuffer)=> {
+        this.offlineContext.startRendering().then((renderedBuffer: AudioBuffer)=> {
             // send message, that audio was rendered to offline buffer (and attach rendered data):
             this.fileProcessingSource.next(new FileRenderedMessage(renderedBuffer));
             this.renderedBuffer = renderedBuffer
@@ -103,11 +114,14 @@ export class ModernAudioWrapper implements IAudioWrapper {
     //
     // Also we got OfflineAudioContext without strong typing, because TS there aren't appropriate type definitions and
     // say that onstatechange, resume and suspend are absent.
-    private startListeningProgress(oac:any, ab:AudioBuffer) {
+    private startListeningProgress(oac: any, ab: AudioBuffer) {
         // listen onstatechange in oder to send current progress sometime:
         oac.onstatechange = (event) => {
             if (oac.state === 'suspended') {
-                oac.suspend(oac.currentTime + 0.1);
+                if (oac.destination >= oac.currentTime + 0.1) {
+                    oac.suspend(oac.currentTime + 0.1);
+                }
+
                 oac.resume();
 
                 //send message with current progress:
@@ -118,12 +132,10 @@ export class ModernAudioWrapper implements IAudioWrapper {
         // Set rendering on pause, then invoke callback 'onstatechange' and will send message with a current
         // rendering progress:
         oac.suspend(0.1);
-
-
     }
 
     //onDecodedError invokes if file decoding was aborted.
-    private onDecodedError(error):void {
+    private onDecodedError(error): void {
         this.fileProcessingSource.next(new FileProcessingErrorMessage(error));
     }
 
@@ -131,15 +143,15 @@ export class ModernAudioWrapper implements IAudioWrapper {
     // Fields
     // ************
 
-    private context:AudioContext;
-    private offlineContext:OfflineAudioContext;
-    private audioBufferSource:AudioBufferSourceNode;
-    private renderedBuffer:AudioBuffer = null;
-    private song:AudioBufferSourceNode;
+    private context: AudioContext;
+    private offlineContext: OfflineAudioContext;
+    private audioBufferSource: AudioBufferSourceNode;
+    private renderedBuffer: AudioBuffer = null;
+    private song: AudioBufferSourceNode;
+    private playedTime: number = 0;
 
-
-    private _source:File;
-    get source():File {
+    private _source: File;
+    get source(): File {
         return this._source;
     }
 
@@ -148,11 +160,22 @@ export class ModernAudioWrapper implements IAudioWrapper {
     // ************
 
     private fileProcessingSource = new Subject<any>();
-    fileProcessing$:Observable<any> = this.fileProcessingSource.asObservable();
+    fileProcessing$: Observable<any> = this.fileProcessingSource.asObservable();
+
+    private handlePlayStateChanged(): void {
+        this.playedTime += 1;
+        this.fileProcessingSource.next(new FilePlayedMessage(this.playedTime));
+    };
+
+    private handlePlayEnded(): void {
+        this.fileProcessingSource.next(new FilePlayEndedMessage());
+    }
 
     // ************
     // Methods
     // ************
+
+    private timer: NodeJS.Timer;
 
     play() {
         if (this.song != null) {
@@ -163,11 +186,21 @@ export class ModernAudioWrapper implements IAudioWrapper {
         this.song.buffer = this.renderedBuffer;
 
         this.song.connect(this.context.destination);
-        this.song.start()
+
+        this.startPlayback();
     }
 
     pause() {
+        clearInterval(this.timer);
         this.song.stop();
         this.song = null;
+    }
+
+    startPlayback() {
+        this.playedTime = 0;
+        this.timer = setInterval(this.handlePlayStateChanged.bind(this), 1000);
+        this.song.onended = ()=> clearInterval(this.timer);
+
+        this.song.start();
     }
 }

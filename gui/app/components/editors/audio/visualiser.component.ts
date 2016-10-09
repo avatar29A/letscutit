@@ -35,10 +35,23 @@ export class VisualiserComponent implements OnInit {
         return this._data;
     }
 
+    // When visualization needs to integrate with player, you can bind this property with
+    // currentTime from player instance. Then visualisation will render was played frames in other color.
+    //
+    // currentTime stores time into seconds.
+    private _currentTime: number = 0;
+
+    @Input()
+    public set CurrentTime(value: number) {
+        this._currentTime = value;
+
+        // update
+        this.draw();
+    }
+
     draw() {
         let context = this._holstCtx;
         context.lineWidth = 1;
-        context.strokeStyle = '#6d87ae';
 
         // make Wave
         let wave = new Wave(this.buffer);
@@ -55,12 +68,15 @@ export class VisualiserComponent implements OnInit {
             let topY = zero - (zero / (wave.topBound / frame.top));
             let bottomY = zero + (zero / (wave.bottomBound / frame.bottom));
 
+            // draws frame line:
+            context.beginPath();
+            console.log(i + " <= " + this._currentTime);
+            context.strokeStyle = i <= this._currentTime ? '#0950ac' : '#6d87ae';
             context.moveTo(x, topY);
             context.lineTo(x, bottomY);
+            context.stroke();
 
             x += distance;
         }
-
-        context.stroke();
     }
 }

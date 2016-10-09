@@ -8,9 +8,8 @@ import {IAudioWrapper} from "../../../core/audio/audiowrapper.abstract";
 import {BusyNotificationService} from "../../../services/app/appbusy-notification.service";
 import {
     ModernAudioWrapper, FileRenderedMessage,
-    FileRenderProgressMessage
+    FileRenderProgressMessage, FilePlayedMessage
 } from "../../../core/audio/audiowrapper.modern";
-
 
 
 enum EditorState {
@@ -29,21 +28,21 @@ enum EditorState {
     styleUrls: ['app/pages/editors/audio/audio-editor.component.css']
 })
 export class AudioEditorComponent {
-    private selectedFile:File;
+    private selectedFile: File;
 
     @ViewChild(VisualiserComponent)
-    private visualiser:VisualiserComponent;
+    private visualiser: VisualiserComponent;
 
-    state:EditorState;
+    state: EditorState;
     editorState = EditorState;
-    audio:IAudioWrapper;
-    audioBuffer:AudioBuffer;
+    audio: IAudioWrapper;
+    audioBuffer: AudioBuffer;
 
-    constructor(private busyNotification:BusyNotificationService) {
+    constructor(private busyNotification: BusyNotificationService) {
         this.state = EditorState.Idle;
     }
 
-    onDropedFile(file:File):void {
+    onDropedFile(file: File): void {
         this.busyNotification.appBusySpinnerShow();
 
         this.selectedFile = file;
@@ -56,11 +55,11 @@ export class AudioEditorComponent {
     }
 
     // Up progress status to 5%. It's need only for user like look.
-    private startAudioFileProcessing():void {
+    private startAudioFileProcessing(): void {
         this.busyNotification.prepare();
     }
 
-    private handleAudioProcessingMessage(message:any):void {
+    private handleAudioProcessingMessage(message: any): void {
         if (message instanceof FileRenderedMessage) {
             let renderedMessage = <FileRenderedMessage>message;
             this.onReceivedAudioData(renderedMessage.renderedBuffer);
@@ -74,10 +73,16 @@ export class AudioEditorComponent {
 
             return;
         }
+
+        if (message instanceof FilePlayedMessage) {
+            let playedMessage = <FilePlayedMessage>message;
+            console.log(playedMessage);
+            this.visualiser.CurrentTime = playedMessage.currentTime;
+        }
     }
 
     // Invoke when we received rendered audio data from AudioWrapper
-    private onReceivedAudioData(ab:AudioBuffer):void {
+    private onReceivedAudioData(ab: AudioBuffer): void {
         this.busyNotification.progressComplete();
 
         this.audioBuffer = ab;
