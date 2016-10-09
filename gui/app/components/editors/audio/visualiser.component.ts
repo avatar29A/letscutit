@@ -2,87 +2,65 @@
  * Created by Warlock on 02.10.2016.
  */
 
-import {Component, Inject, OnInit} from "@angular/core";
-import { DOCUMENT } from '@angular/platform-browser';
+import {Component, Input, Inject, OnInit} from "@angular/core";
+import {DOCUMENT} from '@angular/platform-browser';
+import {Wave} from "../../../core/audio/wave"
 
 @Component({
     selector: 'wave-visualiser',
-    template: '<canvas id="holst" width="800" height="600"></canvas>'
+    template: '<canvas id="holst" width="{{HolstWidth}}" height="{{HolstHeight}}"></canvas>'
 })
 export class VisualiserComponent implements OnInit {
-    private _holst:HTMLCanvasElement;
-    private _holstCtx:CanvasRenderingContext2D;
-    private _data:AudioBuffer;
+    private _holst: HTMLCanvasElement;
+    private _holstCtx: CanvasRenderingContext2D;
+    private _data: AudioBuffer;
+
+    @Input() HolstWidth: number = 800;
+    @Input() HolstHeight: number = 600;
 
     constructor(@Inject(DOCUMENT) private document: any) {
     }
 
-    ngOnInit():void {
+    ngOnInit(): void {
         this._holst = <HTMLCanvasElement>this.document.getElementById('holst');
         this._holstCtx = this._holst.getContext("2d");
     }
 
-    public set buffer(ab:AudioBuffer) {
+    public set buffer(ab: AudioBuffer) {
         this._data = ab;
         this.draw();
     }
 
-    public get buffer():AudioBuffer {
+    public get buffer(): AudioBuffer {
         return this._data;
     }
 
     draw() {
-        let width = this._holst.width;
-        let height = this._holst.height;
-
         let context = this._holstCtx;
+        context.lineWidth = 1;
+        context.strokeStyle = '#6d87ae';
 
-        context.fillStyle = 'rgb(255, 255, 255)';
-        context.fillRect(0, 0, width, height);
-
-        context.lineWidth = 2;
-        context.strokeStyle = 'rgb(0, 0, 0)';
+        // make Wave
+        let wave = new Wave(this.buffer);
 
         // distance between to points (scale is equal an one second):
-        let distance = (width * 1.0) / this.buffer.duration;
-
-        let channel0 = this.buffer.getChannelData(0);
-
-        let frameBound = 0;
-        let frameSumValue = 0;
-        let drownFrameAmount = 0;
-        let averageValues = [];
+        let distance = this.HolstWidth / wave.duration;
+        let zero = this.HolstHeight / 2;
         let x = 0;
-
-        context.beginPath();
+        let channel0 = wave.channels[0];
 
         for (var i = 0; i < channel0.length; i++) {
-            frameBound += 1;
-            frameSumValue += channel0[i];
+            let frame = channel0.frames[i];
 
-            // Draw frame. Frame's value is equal average sum whole samples.
-            if (frameBound === this.buffer.sampleRate - 1) {
-                let frameAverageValue = (frameSumValue / this.buffer.sampleRate) * 100000;
-                averageValues.push(frameAverageValue);
+            let topY = zero - (zero / (wave.topBound / frame.top));
+            let bottomY = zero + (zero / (wave.bottomBound / frame.bottom));
 
-                var y = frameAverageValue + height / 2;
+            context.moveTo(x, topY);
+            context.lineTo(x, bottomY);
 
-                if (drownFrameAmount === 0) {
-                    context.moveTo(x, y);
-                } else {
-                    context.lineTo(x, y);
-                }
-
-                drownFrameAmount += 1;
-                x += distance;
-
-                // reset
-                frameBound = 0;
-                frameSumValue = 0;
-            }
+            x += distance;
         }
 
-        context.lineTo(this._holst.width, this._holst.height / 2);
         context.stroke();
     }
 }
