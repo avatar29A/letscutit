@@ -2,7 +2,8 @@
  * Created by Warlock on 02.10.2016.
  */
 
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Inject, OnInit} from "@angular/core";
+import { DOCUMENT } from '@angular/platform-browser';
 
 @Component({
     selector: 'wave-visualiser',
@@ -13,11 +14,11 @@ export class VisualiserComponent implements OnInit {
     private _holstCtx:CanvasRenderingContext2D;
     private _data:AudioBuffer;
 
-    constructor() {
+    constructor(@Inject(DOCUMENT) private document: any) {
     }
 
     ngOnInit():void {
-        this._holst = <HTMLCanvasElement>document.getElementById('holst');
+        this._holst = <HTMLCanvasElement>this.document.getElementById('holst');
         this._holstCtx = this._holst.getContext("2d");
     }
 
@@ -31,8 +32,6 @@ export class VisualiserComponent implements OnInit {
     }
 
     draw() {
-        // let drawVisual = requestAnimationFrame(this.draw.bind(this));
-
         let width = this._holst.width;
         let height = this._holst.height;
 
