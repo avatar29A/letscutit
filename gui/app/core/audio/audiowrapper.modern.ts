@@ -198,7 +198,6 @@ export class ModernAudioWrapper implements IAudioWrapper {
 
     startPlayback() {
         this.playedTime = 0;
-        this.timer = setInterval(this.handlePlayStateChanged.bind(this), 1000);
         this.song.onended = ()=> clearInterval(this.timer);
 
         this.song.start();
