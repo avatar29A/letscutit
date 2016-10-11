@@ -5,6 +5,6 @@ set -e
 #
 #fi
 
-( cd gui && npm install && gulp)
+#( npm cache clean && npm install --no-bin-links && gulp)
 
 exec "$@"

@@ -2,10 +2,6 @@ FROM buildpack-deps:jessie
 
 MAINTAINER Glebov Boris "hello@letscut.it"
 
-# --------------- add DATAPK GUI user ---------------
-# папка в /home нужна для bower
-RUN groupadd --system letscutit && useradd --system -g letscutit gui && mkdir /home/gui/ && chown gui:letscutit /home/gui/
-
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
   && for key in \
@@ -44,16 +40,11 @@ COPY ./dockerfiles/GUI/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-ENV LETSCUTIT_DIR /opt/letscutit
-ENV PID_DIR /tmp
+ENV LETSCUTIT_DIR /opt/letscutit/gui
 
 WORKDIR $LETSCUTIT_DIR
 
-USER root
-COPY gui ./gui/
-RUN cd ./gui/
+COPY gui .
+RUN npm install
 
 CMD ["npm", "start"]
-
-
-
