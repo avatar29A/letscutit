@@ -5,6 +5,7 @@
 import {Component, Input, Inject, OnInit} from "@angular/core";
 import {DOCUMENT} from '@angular/platform-browser';
 import {Wave} from "../../../core/audio/wave"
+import {IAudioBuffer} from "../../../core/audio/audiobuffer.abstract";
 
 @Component({
     selector: 'wave-visualiser',
@@ -13,7 +14,7 @@ import {Wave} from "../../../core/audio/wave"
 export class VisualiserComponent implements OnInit {
     private _holst: HTMLCanvasElement;
     private _holstCtx: CanvasRenderingContext2D;
-    private _data: AudioBuffer;
+    private _data: IAudioBuffer;
 
     @Input() HolstWidth: number = 800;
     @Input() HolstHeight: number = 600;
@@ -26,12 +27,12 @@ export class VisualiserComponent implements OnInit {
         this._holstCtx = this._holst.getContext("2d");
     }
 
-    public set buffer(ab: AudioBuffer) {
+    public set buffer(ab: IAudioBuffer) {
         this._data = ab;
         this.draw();
     }
 
-    public get buffer(): AudioBuffer {
+    public get buffer(): IAudioBuffer {
         return this._data;
     }
 

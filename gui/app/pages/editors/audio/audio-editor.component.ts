@@ -7,9 +7,10 @@ import {VisualiserComponent} from "../../../components/editors/audio/visualiser.
 import {IAudioWrapper} from "../../../core/audio/audiowrapper.abstract";
 import {BusyNotificationService} from "../../../services/app/appbusy-notification.service";
 import {
-    ModernAudioWrapper, FileRenderedMessage,
+    FileRenderedMessage,
     FileRenderProgressMessage, FilePlayedMessage
 } from "../../../core/audio/audiowrapper.modern";
+import {audioWrapperFactory} from "../../../factories/audiowrapper.factory"
 
 
 enum EditorState {
@@ -48,7 +49,7 @@ export class AudioEditorComponent {
         this.selectedFile = file;
         this.state = EditorState.GotFile;
 
-        this.audio = new ModernAudioWrapper(this.selectedFile);
+        this.audio = audioWrapperFactory(this.selectedFile);
         this.audio.fileProcessing$.subscribe(this.handleAudioProcessingMessage.bind(this));
 
         this.startAudioFileProcessing();

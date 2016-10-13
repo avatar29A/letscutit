@@ -6,36 +6,6 @@ import {IAudioWrapper} from "./audiowrapper.abstract";
 import {Observable} from "rxjs/Rx";
 import Timer = NodeJS.Timer;
 
-export class FileLoadedMessage {
-    constructor(public ab: AudioBuffer) {
-    }
-}
-
-export class FileRenderedMessage {
-    constructor(public renderedBuffer: AudioBuffer) {
-    }
-}
-
-export class FileRenderProgressMessage {
-    constructor(public progress: number) {
-    }
-}
-
-export class FileProcessingErrorMessage {
-    constructor(public error: any) {
-    }
-}
-
-export class FilePlayedMessage {
-    constructor(public currentTime: number) {
-
-    }
-}
-
-export class FilePlayEndedMessage {
-
-}
-
 // AudioWrapper
 //
 //  This class wraps binary audio file and provides some methods to manipulate it.
@@ -162,15 +132,6 @@ export class ModernAudioWrapper implements IAudioWrapper {
     private fileProcessingSource = new Subject<any>();
     fileProcessing$: Observable<any> = this.fileProcessingSource.asObservable();
 
-    private handlePlayStateChanged(): void {
-        this.playedTime += 1;
-        this.fileProcessingSource.next(new FilePlayedMessage(this.playedTime));
-    };
-
-    private handlePlayEnded(): void {
-        this.fileProcessingSource.next(new FilePlayEndedMessage());
-    }
-
     // ************
     // Methods
     // ************
@@ -201,5 +162,35 @@ export class ModernAudioWrapper implements IAudioWrapper {
         this.song.onended = ()=> clearInterval(this.timer);
 
         this.song.start();
+    }
+}
+
+//========================================
+//              Messages
+// ========================================
+
+export class FileLoadedMessage {
+    constructor(public ab: AudioBuffer) {
+    }
+}
+
+export class FileRenderedMessage {
+    constructor(public renderedBuffer: AudioBuffer) {
+    }
+}
+
+export class FileRenderProgressMessage {
+    constructor(public progress: number) {
+    }
+}
+
+export class FileProcessingErrorMessage {
+    constructor(public error: any) {
+    }
+}
+
+export class FilePlayedMessage {
+    constructor(public currentTime: number) {
+
     }
 }
