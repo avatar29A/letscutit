@@ -2,26 +2,29 @@
  * Created by Warlock on 09.10.2016.
  */
 
+import {IAudioBuffer} from "./audiobuffer.abstract";
+
+
 // Wave represents data structure for helping to work with PCM data.
 export class Wave {
-    topBound: number = 0;
-    bottomBound: number = 0;
+    topBound:number = 0;
+    bottomBound:number = 0;
 
-    private _channels: Channel[];
-    public get channels(): Channel[] {
+    private _channels:Channel[];
+    public get channels():Channel[] {
         return this._channels;
     }
 
-    public get duration(): number {
+    public get duration():number {
         return this.audioBuffer.duration;
     }
 
-    constructor(private audioBuffer: AudioBuffer) {
+    constructor(private audioBuffer:IAudioBuffer) {
         this._channels = this.createChannels(audioBuffer);
     }
 
     //framing breaks pcm audio stream on frames with duration equals step's value.
-    private framing(channelPCM: Float32Array, sampleRate: number, step: number = 1): Channel {
+    private framing(channelPCM:Float32Array, sampleRate:number, step:number = 1):Channel {
         let channel = new Channel();
 
         // calcs how many samples will store in one frame.
@@ -57,8 +60,8 @@ export class Wave {
         return channel;
     }
 
-    private createChannels(audioBuffer: AudioBuffer): Channel[] {
-        let channels: Channel[] = [];
+    private createChannels(audioBuffer:IAudioBuffer):Channel[] {
+        let channels:Channel[] = [];
         for (var i = 0; i < audioBuffer.numberOfChannels; i++) {
             channels.push(this.framing(audioBuffer.getChannelData(i), audioBuffer.sampleRate));
         }
@@ -67,7 +70,7 @@ export class Wave {
     }
 
     // updateYExtremum changes extremum values of the Y axis.
-    private updateYExtremum(frame: Frame) {
+    private updateYExtremum(frame:Frame) {
         if (this.topBound < frame.top) {
             this.topBound = frame.top;
         }
@@ -79,21 +82,21 @@ export class Wave {
 }
 
 class Channel {
-    private _frames: Frame[] = [];
-    get frames(): Frame[] {
+    private _frames:Frame[] = [];
+    get frames():Frame[] {
         return this._frames;
     }
 
-    get length(): number {
+    get length():number {
         return this._frames.length;
     }
 
-    add(frame: Frame): void {
+    add(frame:Frame):void {
         this._frames.push(frame);
     }
 }
 
 class Frame {
-    constructor(public top: number, public bottom: number) {
+    constructor(public top:number, public bottom:number) {
     }
 }

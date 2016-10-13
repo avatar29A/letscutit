@@ -30,6 +30,23 @@ import Timer = NodeJS.Timer;
 
 export class ModernAudioWrapper implements IAudioWrapper {
     // ************
+    // Fields
+    // ************
+
+    private context: AudioContext;
+    private offlineContext: OfflineAudioContext;
+    private audioBufferSource: AudioBufferSourceNode;
+    private renderedBuffer: AudioBuffer = null;
+    private song: AudioBufferSourceNode;
+    private playedTime: number = 0;
+
+    private _source: File;
+    get source(): File {
+        return this._source;
+    }
+
+
+    // ************
     // .ctor
     // ************
 
@@ -110,22 +127,6 @@ export class ModernAudioWrapper implements IAudioWrapper {
     }
 
     // ************
-    // Fields
-    // ************
-
-    private context: AudioContext;
-    private offlineContext: OfflineAudioContext;
-    private audioBufferSource: AudioBufferSourceNode;
-    private renderedBuffer: AudioBuffer = null;
-    private song: AudioBufferSourceNode;
-    private playedTime: number = 0;
-
-    private _source: File;
-    get source(): File {
-        return this._source;
-    }
-
-    // ************
     // Events
     // ************
 
@@ -135,8 +136,6 @@ export class ModernAudioWrapper implements IAudioWrapper {
     // ************
     // Methods
     // ************
-
-    private timer: NodeJS.Timer;
 
     play() {
         if (this.song != null) {
@@ -152,15 +151,12 @@ export class ModernAudioWrapper implements IAudioWrapper {
     }
 
     pause() {
-        clearInterval(this.timer);
         this.song.stop();
         this.song = null;
     }
 
     startPlayback() {
         this.playedTime = 0;
-        this.song.onended = ()=> clearInterval(this.timer);
-
         this.song.start();
     }
 }

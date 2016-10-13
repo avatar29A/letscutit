@@ -11,5 +11,4 @@ import {Observable} from "rxjs/Rx";
 // AudioWrapper based on Web Audio API it won't work in older browser).
 export interface IAudioWrapper {
     fileProcessing$: Observable<any>;
-    new(source:File):IAudioWrapper;
 }
