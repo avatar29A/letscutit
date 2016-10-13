@@ -4,6 +4,7 @@
 
 import {IAudioWrapper} from "./audiowrapper.abstract";
 import {Observable, Subject} from "rxjs/Rx";
+import {} from "av"
 
 /*
  AuroraAudioWrapper
