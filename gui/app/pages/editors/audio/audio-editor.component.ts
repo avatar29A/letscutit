@@ -6,11 +6,10 @@ import {Component, ViewChild} from "@angular/core";
 import {VisualiserComponent} from "../../../components/editors/audio/visualiser.component";
 import {IAudioWrapper} from "../../../core/audio/audiowrapper.abstract";
 import {BusyNotificationService} from "../../../services/app/appbusy-notification.service";
-import {
-    FileRenderedMessage,
-    FileRenderProgressMessage, FilePlayedMessage
-} from "../../../core/audio/audiowrapper.modern";
-import {audioWrapperFactory} from "../../../factories/audiowrapper.factory"
+
+import {audioWrapperFactory} from "../../../factories/audiowrapper.factory";
+import {FileRenderedMessage, FileRenderProgressMessage, FilePlayedMessage} from "../../../core/audio/audio.messages";
+
 
 
 enum EditorState {
@@ -44,7 +43,7 @@ export class AudioEditorComponent {
     }
 
     onDropedFile(file: File): void {
-        this.busyNotification.appBusySpinnerShow();
+        //this.busyNotification.appBusySpinnerShow();
 
         this.selectedFile = file;
         this.state = EditorState.GotFile;
@@ -52,7 +51,6 @@ export class AudioEditorComponent {
         this.audio = audioWrapperFactory(this.selectedFile);
         this.audio.fileProcessing$.subscribe(this.handleAudioProcessingMessage.bind(this));
 
-        this.startAudioFileProcessing();
     }
 
     // Up progress status to 5%. It's need only for user like look.

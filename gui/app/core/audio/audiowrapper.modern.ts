@@ -1,3 +1,4 @@
+///<reference path="audio.messages.ts"/>
 /**
  * Created by Warlock on 02.10.2016.
  */
@@ -5,6 +6,10 @@ import {Subject}    from 'rxjs/Subject';
 import {IAudioWrapper} from "./audiowrapper.abstract";
 import {Observable} from "rxjs/Rx";
 import Timer = NodeJS.Timer;
+import {
+    FileLoadedMessage, FileRenderedMessage, FileProcessingErrorMessage,
+    FileRenderProgressMessage
+} from "./audio.messages";
 
 // AudioWrapper
 //
@@ -158,35 +163,5 @@ export class ModernAudioWrapper implements IAudioWrapper {
     startPlayback() {
         this.playedTime = 0;
         this.song.start();
-    }
-}
-
-//========================================
-//              Messages
-// ========================================
-
-export class FileLoadedMessage {
-    constructor(public ab: AudioBuffer) {
-    }
-}
-
-export class FileRenderedMessage {
-    constructor(public renderedBuffer: AudioBuffer) {
-    }
-}
-
-export class FileRenderProgressMessage {
-    constructor(public progress: number) {
-    }
-}
-
-export class FileProcessingErrorMessage {
-    constructor(public error: any) {
-    }
-}
-
-export class FilePlayedMessage {
-    constructor(public currentTime: number) {
-
     }
 }

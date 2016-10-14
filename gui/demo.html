@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo Aurora</title>
+    <script src="libs/aurora/aurora.js"></script>
+    <script src="libs/mp3/mp3.js"></script>
+    <script>
+        function fileDragDrop(e) {
+            var files = e.target.files || e.dataTransfer.files;
+            var file = files[0];
+
+            var player = AV.Player.fromFile(file);
+            player.play();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            this.selectFileCtrl = document.getElementById('fileselect');
+            this.selectFileCtrl.addEventListener('change', fileDragDrop, false);
+        })
+    </script>
+</head>
+<body>
+<input type="file" id="fileselect"/>
+</body>
+</html>
