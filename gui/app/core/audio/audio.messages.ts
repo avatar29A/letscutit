@@ -6,13 +6,15 @@
 //              Messages
 // ========================================
 
+import {IAudioBuffer} from "./audiobuffer.abstract";
+
 export class FileLoadedMessage {
-    constructor(public ab:AudioBuffer) {
+    constructor(public ab:IAudioBuffer) {
     }
 }
 
 export class FileRenderedMessage {
-    constructor(public renderedBuffer:AudioBuffer) {
+    constructor(public renderedBuffer:IAudioBuffer) {
     }
 }
 

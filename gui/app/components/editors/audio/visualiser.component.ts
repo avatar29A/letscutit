@@ -45,12 +45,10 @@ export class VisualiserComponent implements OnInit {
     @Input()
     public set CurrentTime(value: number) {
         this._currentTime = value;
-
-        // update
-        this.draw();
     }
 
     draw() {
+        requestAnimationFrame(this.draw.bind(this));
         let context = this._holstCtx;
         context.lineWidth = 1;
 
@@ -62,6 +60,8 @@ export class VisualiserComponent implements OnInit {
         let zero = this.HolstHeight / 2;
         let x = 0;
         let channel0 = wave.channels[0];
+
+        context.clearRect(0, 0, this.HolstWidth, this.HolstHeight);
 
         for (var i = 0; i < channel0.length; i++) {
             let frame = channel0.frames[i];

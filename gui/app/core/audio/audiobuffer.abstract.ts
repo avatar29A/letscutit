@@ -9,4 +9,5 @@ export interface IAudioBuffer {
     sampleRate:number;
 
     getChannelData(channel:number): Float32Array;
+    getData():Float32Array;
 }

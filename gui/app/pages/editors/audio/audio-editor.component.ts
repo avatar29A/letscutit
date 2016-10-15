@@ -5,11 +5,11 @@
 import {Component, ViewChild} from "@angular/core";
 import {VisualiserComponent} from "../../../components/editors/audio/visualiser.component";
 import {IAudioWrapper} from "../../../core/audio/audiowrapper.abstract";
+import {IAudioBuffer} from "../../../core/audio/audiobuffer.abstract";
 import {BusyNotificationService} from "../../../services/app/appbusy-notification.service";
 
 import {audioWrapperFactory} from "../../../factories/audiowrapper.factory";
 import {FileRenderedMessage, FileRenderProgressMessage, FilePlayedMessage} from "../../../core/audio/audio.messages";
-
 
 
 enum EditorState {
@@ -36,7 +36,6 @@ export class AudioEditorComponent {
     state: EditorState;
     editorState = EditorState;
     audio: IAudioWrapper;
-    audioBuffer: AudioBuffer;
 
     constructor(private busyNotification: BusyNotificationService) {
         this.state = EditorState.Idle;
@@ -51,24 +50,23 @@ export class AudioEditorComponent {
         this.audio = audioWrapperFactory(this.selectedFile);
         this.audio.fileProcessing$.subscribe(this.handleAudioProcessingMessage.bind(this));
 
+        this.audio.progress((progress:number)=>{
+            console.log("Progress: " + progress);
+            this.visualiser.CurrentTime = progress;
+        });
+        
+        this.startAudioFileProcessing();
     }
 
     // Up progress status to 5%. It's need only for user like look.
     private startAudioFileProcessing(): void {
-        this.busyNotification.prepare();
+        this.busyNotification.progressFlash();
     }
 
     private handleAudioProcessingMessage(message: any): void {
         if (message instanceof FileRenderedMessage) {
             let renderedMessage = <FileRenderedMessage>message;
             this.onReceivedAudioData(renderedMessage.renderedBuffer);
-
-            return;
-        }
-
-        if (message instanceof FileRenderProgressMessage) {
-            let progressMessage = <FileRenderProgressMessage>message;
-            this.busyNotification.progressUpTo(progressMessage.progress);
 
             return;
         }
@@ -81,10 +79,7 @@ export class AudioEditorComponent {
     }
 
     // Invoke when we received rendered audio data from AudioWrapper
-    private onReceivedAudioData(ab: AudioBuffer): void {
-        this.busyNotification.progressComplete();
-
-        this.audioBuffer = ab;
+    private onReceivedAudioData(ab: IAudioBuffer): void {
         this.visualiser.buffer = ab;
     }
 }

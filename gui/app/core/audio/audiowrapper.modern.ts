@@ -160,6 +160,11 @@ export class ModernAudioWrapper implements IAudioWrapper {
         this.song = null;
     }
 
+    stop() {
+        this.song.stop();
+        this.song = null;
+    }
+
     startPlayback() {
         this.playedTime = 0;
         this.song.start();
