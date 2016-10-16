@@ -4,6 +4,7 @@
  */
 import {Subject}    from 'rxjs/Subject';
 import {IAudioWrapper} from "./audiowrapper.abstract";
+import {IAudioBuffer} from "./audiobuffer.abstract";
 import {Observable} from "rxjs/Rx";
 import Timer = NodeJS.Timer;
 import {
@@ -75,7 +76,7 @@ export class ModernAudioWrapper implements IAudioWrapper {
 
     //onDecodedSuccessfull invokes after file was successfully decoded.
     //Otherwise will be invoked onDecodedError method.
-    private onDecodedSuccessfull(ab: AudioBuffer): void {
+    private onDecodedSuccessfull(ab: IAudioBuffer): void {
         // send message, that AudioBuffer was loaded:
         this.fileProcessingSource.next(new FileLoadedMessage(ab));
 
@@ -91,7 +92,7 @@ export class ModernAudioWrapper implements IAudioWrapper {
         this.startListeningProgress(this.offlineContext, ab);
 
         // rendered audio file to offline buffer:
-        this.offlineContext.startRendering().then((renderedBuffer: AudioBuffer)=> {
+        this.offlineContext.startRendering().then((renderedBuffer: IAudioBuffer)=> {
             // send message, that audio was rendered to offline buffer (and attach rendered data):
             this.fileProcessingSource.next(new FileRenderedMessage(renderedBuffer));
             this.renderedBuffer = renderedBuffer

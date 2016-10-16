@@ -13,7 +13,6 @@ export interface IAudioWrapper {
     play():void;
     pause():void;
     stop():void;
-    progress(callback:(progress:number)=>void):void;
     
     fileProcessing$: Observable<any>;
 }

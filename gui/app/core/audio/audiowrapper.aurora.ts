@@ -17,17 +17,17 @@ export class AuroraAudioWrapper implements IAudioWrapper {
     // ************
     // Fields
     // ************
-    private _source:File;
-    private av:Aurora = new Aurora();
-    private asset:AssetProxy;
-    private player:PlayerProxy;
-    private lastCurrentTime:number = 0;
-    private externalProgressCallback:(progress:number)=>void = null;
+    private _source: File;
+    private av: Aurora = new Aurora();
+    private asset: AssetProxy;
+    private player: PlayerProxy = null;
+    private lastCurrentTime: number = 0;
+    private externalProgressCallback: (progress: number) => void = null;
 
     // ************
     // .ctor
     // ************
-    constructor(source:File) {
+    constructor(source: File) {
         this._source = source;
         this.extractPCM(source);
     }
@@ -35,7 +35,7 @@ export class AuroraAudioWrapper implements IAudioWrapper {
     // ************
     // Properties
     // ************
-    get source():File {
+    get source(): File {
         return this._source;
     }
 
@@ -44,30 +44,27 @@ export class AuroraAudioWrapper implements IAudioWrapper {
     // ************
 
     private fileProcessingSource = new Subject<any>();
-    fileProcessing$:Observable<any> = this.fileProcessingSource.asObservable();
+    fileProcessing$: Observable<any> = this.fileProcessingSource.asObservable();
 
     // ************
     // Methods
     // ************
 
-    play():void {
-        this.player = this.av.Player.fromFile(this.source);
-        this.player.play();
+    play(): void {
+        if (this.player == null) {
+            this.player = this.av.Player.fromFile(this.source);
+            this.player.on("progress", this.onProgress.bind(this));
+        }
 
-        //subsribes on events:
-        this.player.on("progress", this.onProgress.bind(this));
+        this.player.play();
     }
 
-    pause():void {
+    pause(): void {
         this.player.pause();
     }
 
-    stop():void {
+    stop(): void {
         this.player.stop();
-    }
-
-    progress(callback:(progress:number)=>void):void {
-        this.externalProgressCallback = callback;
     }
 
     // ************
@@ -76,29 +73,28 @@ export class AuroraAudioWrapper implements IAudioWrapper {
 
     // extractPCM extracts PCM signal and send message to fileProcessingSource. 
     // Sends instance of FileRenderedMessage.  
-    private extractPCM(file:File):void {
+    private extractPCM(file: File): void {
         this.asset = this.av.Asset.fromFile(file);
         this.asset.decodeToBuffer(this.onExtractedPCM.bind(this));
+        this.asset.on("buffer", this.onBuffer.bind(this));
     }
 
     // handler for callback decodeToBuffer from Asset
     // invoke when whole audio stream will be decoded
-    private onExtractedPCM(pcmdata:Float32Array):void {
+    private onExtractedPCM(pcmdata: Float32Array): void {
         let audioBuffer = AuroraAudioBuffer.fromArray(pcmdata);
         audioBuffer.attachAsset(this.asset);
-    
+
         this.fileProcessingSource.next(new FileRenderedMessage(audioBuffer));
     }
 
     // handler for event progress (Aurora's Player).
-    private onProgress(progress:number):void {
+    private onProgress(progress: number): void {
         let currentTime = this.player.currentTime / 1000;
-     
-        if(currentTime - this.lastCurrentTime >= 1) {
-            this.lastCurrentTime = currentTime;
-            if(this.externalProgressCallback != null) {
-                this.externalProgressCallback(currentTime);
-            }
-        }
+        this.fileProcessingSource.next(new FilePlayedMessage(currentTime));
+    }
+
+    private onBuffer(progress: number): void {
+        this.fileProcessingSource.next(new FileRenderProgressMessage(progress));
     }
 }

@@ -15,6 +15,9 @@ export class VisualiserComponent implements OnInit {
     private _holst: HTMLCanvasElement;
     private _holstCtx: CanvasRenderingContext2D;
     private _data: IAudioBuffer;
+    private _wave:Wave;
+    private _drawing:boolean;
+    
 
     @Input() HolstWidth: number = 800;
     @Input() HolstHeight: number = 600;
@@ -29,6 +32,7 @@ export class VisualiserComponent implements OnInit {
 
     public set buffer(ab: IAudioBuffer) {
         this._data = ab;
+        this._wave = new Wave(ab);
         this.draw();
     }
 
@@ -45,33 +49,38 @@ export class VisualiserComponent implements OnInit {
     @Input()
     public set CurrentTime(value: number) {
         this._currentTime = value;
+        this.redraw();
+    }
+
+    redraw() {
+        if(this._drawing){
+            return;
+        }
+
+        this._drawing = true;
+        setTimeout(this.draw.bind(this), 100)
     }
 
     draw() {
-        requestAnimationFrame(this.draw.bind(this));
         let context = this._holstCtx;
+        context.clearRect(0, 0, this.HolstWidth, this.HolstHeight);
+
         context.lineWidth = 1;
 
-        // make Wave
-        let wave = new Wave(this.buffer);
-
         // distance between to points (scale is equal an one second):
-        let distance = this.HolstWidth / wave.duration;
+        let distance = this.HolstWidth / this._wave.duration;
         let zero = this.HolstHeight / 2;
         let x = 0;
-        let channel0 = wave.channels[0];
-
-        context.clearRect(0, 0, this.HolstWidth, this.HolstHeight);
+        let channel0 = this._wave.channels[0];
 
         for (var i = 0; i < channel0.length; i++) {
             let frame = channel0.frames[i];
 
-            let topY = zero - (zero / (wave.topBound / frame.top));
-            let bottomY = zero + (zero / (wave.bottomBound / frame.bottom));
+            let topY = zero - (zero / (this._wave.topBound / frame.top));
+            let bottomY = zero + (zero / (this._wave.bottomBound / frame.bottom));
 
             // draws frame line:
             context.beginPath();
-            console.log(i + " <= " + this._currentTime);
             context.strokeStyle = i <= this._currentTime ? '#0950ac' : '#6d87ae';
             context.moveTo(x, topY);
             context.lineTo(x, bottomY);
@@ -79,5 +88,7 @@ export class VisualiserComponent implements OnInit {
 
             x += distance;
         }
+
+        this._drawing = false;
     }
 }

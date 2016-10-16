@@ -92,7 +92,7 @@ export class AssetProxy {
     //  decodeStart - Emitted when decoding of the actual audio data begins.
     //  data, buffer - Emitted when audio data is decoded. buffer is a Float32Array containing decoded Linear PCM audio. The data emitted by this event is always a Float32Array; if you need the original data as returned by the decoder, use the decoder's data event.
     //  error, err - Emitted when the an error is encountered in the decoding process. Whenever an error is encountered, the decoding process is also stopped automatically.
-    static on(event:string, callback:(any)=>void):void {
+    on(event:string, callback:(any)=>void):void {
         AV.Asset.on(event, callback);
     }
 
@@ -313,6 +313,14 @@ export class AuroraAudioBuffer implements IAudioBuffer {
 
     getData():Float32Array {
         return this.pcm;
+    }
+
+    copyFromChannel(destinition:Float32Array, channelNumber:number,startInChannel:number):void {
+        console.error("Not implemented");
+    }
+
+    copyToChannel(source:Float32Array, channelNumber:number,startInChannel:number):void {
+        console.error("Not implemented");
     }
 
     // ***************

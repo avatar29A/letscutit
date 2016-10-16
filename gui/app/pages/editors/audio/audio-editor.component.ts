@@ -42,28 +42,27 @@ export class AudioEditorComponent {
     }
 
     onDropedFile(file: File): void {
-        //this.busyNotification.appBusySpinnerShow();
-
         this.selectedFile = file;
         this.state = EditorState.GotFile;
 
         this.audio = audioWrapperFactory(this.selectedFile);
         this.audio.fileProcessing$.subscribe(this.handleAudioProcessingMessage.bind(this));
 
-        this.audio.progress((progress:number)=>{
-            console.log("Progress: " + progress);
-            this.visualiser.CurrentTime = progress;
-        });
-        
-        this.startAudioFileProcessing();
-    }
-
-    // Up progress status to 5%. It's need only for user like look.
-    private startAudioFileProcessing(): void {
-        this.busyNotification.progressFlash();
+        // Show waite-screen:
+        this.busyNotification.appBusySpinnerShow();
     }
 
     private handleAudioProcessingMessage(message: any): void {
+        if (message instanceof FileRenderProgressMessage) {
+            let renderedProgressMessage = <FileRenderProgressMessage>message;
+
+            if (renderedProgressMessage.progress < 100) {
+                this.busyNotification.progressUpTo(renderedProgressMessage.progress);
+            } else {
+                this.busyNotification.progressComplete();
+            }
+        }
+
         if (message instanceof FileRenderedMessage) {
             let renderedMessage = <FileRenderedMessage>message;
             this.onReceivedAudioData(renderedMessage.renderedBuffer);
@@ -73,7 +72,6 @@ export class AudioEditorComponent {
 
         if (message instanceof FilePlayedMessage) {
             let playedMessage = <FilePlayedMessage>message;
-            console.log(playedMessage);
             this.visualiser.CurrentTime = playedMessage.currentTime;
         }
     }
