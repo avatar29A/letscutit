@@ -12,32 +12,43 @@ import {IAudioBuffer} from "../../../core/audio/audiobuffer.abstract";
     template: '<canvas id="holst" width="{{HolstWidth}}" height="{{HolstHeight}}"></canvas>'
 })
 export class VisualiserComponent implements OnInit {
-    private _holst: HTMLCanvasElement;
-    private _holstCtx: CanvasRenderingContext2D;
-    private _data: IAudioBuffer;
-    private _wave:Wave;
-    private _drawing:boolean;
-    
 
-    @Input() HolstWidth: number = 800;
-    @Input() HolstHeight: number = 600;
+    // Colors:
+    private scaleDefaultColor: string = "#6d87ae"
+    private scalePlayedColor: string = "#0954b1";
 
-    constructor(@Inject(DOCUMENT) private document: any) {
+    // Size and Merges
+    private scaleDivisionWidth: number = 3;
+    private scaleDivisionSpace: number = 1; // space between two scale divisions
+
+    private host: HTMLCanvasElement;
+    private hostCtx: CanvasRenderingContext2D;
+    private data: IAudioBuffer;
+    private wave: Wave;
+
+    // Flags:
+    private drawing: boolean;
+    private isWaveDrawed: boolean;
+
+    @Input() HolstWidth: number = 750;
+    @Input() HolstHeight: number = 60;
+
+    constructor( @Inject(DOCUMENT) private document: any) {
     }
 
     ngOnInit(): void {
-        this._holst = <HTMLCanvasElement>this.document.getElementById('holst');
-        this._holstCtx = this._holst.getContext("2d");
+        this.host = <HTMLCanvasElement>this.document.getElementById('holst');
+        this.hostCtx = this.host.getContext("2d");
     }
 
     public set buffer(ab: IAudioBuffer) {
-        this._data = ab;
-        this._wave = new Wave(ab);
-        this.draw();
+        this.data = ab;
+        this.wave = new Wave(ab);
+        this.drawWave(this.wave);
     }
 
     public get buffer(): IAudioBuffer {
-        return this._data;
+        return this.data;
     }
 
     // When visualization needs to integrate with player, you can bind this property with
@@ -52,43 +63,54 @@ export class VisualiserComponent implements OnInit {
         this.redraw();
     }
 
-    redraw() {
-        if(this._drawing){
+    redraw(): void {
+        if (this.drawing) {
             return;
         }
 
-        this._drawing = true;
+        this.drawing = true;
         setTimeout(this.draw.bind(this), 100)
     }
 
-    draw() {
-        let context = this._holstCtx;
-        context.clearRect(0, 0, this.HolstWidth, this.HolstHeight);
+    draw(): void {
 
-        context.lineWidth = 1;
+        this.drawing = false;
+    }
 
-        // distance between to points (scale is equal an one second):
-        let distance = this.HolstWidth / this._wave.duration;
-        let zero = this.HolstHeight / 2;
-        let x = 0;
-        let channel0 = this._wave.channels[0];
-
-        for (var i = 0; i < channel0.length; i++) {
-            let frame = channel0.frames[i];
-
-            let topY = zero - (zero / (this._wave.topBound / frame.top));
-            let bottomY = zero + (zero / (this._wave.bottomBound / frame.bottom));
-
-            // draws frame line:
-            context.beginPath();
-            context.strokeStyle = i <= this._currentTime ? '#0950ac' : '#6d87ae';
-            context.moveTo(x, topY);
-            context.lineTo(x, bottomY);
-            context.stroke();
-
-            x += distance;
+    private drawWave(wave:Wave): void {
+        if (this.isWaveDrawed) {
+            return;
         }
 
-        this._drawing = false;
+        let context = this.hostCtx;
+        context.clearRect(0, 0, this.HolstWidth, this.HolstHeight);
+
+        let fullScaleDivisionWidth = this.scaleDivisionWidth + this.scaleDivisionSpace;
+        let numberDivisionsPerFrame = this.HolstWidth / fullScaleDivisionWidth;
+
+        let x = 0;
+        let zero = this.HolstHeight / 2;
+
+        for (var i = 0; i < numberDivisionsPerFrame; i++) {
+            let delta1 = 10 + Math.floor(Math.random() * 10);
+
+            this.drawScaleDivision(x, zero - delta1, x, this.HolstHeight, context);
+            x += fullScaleDivisionWidth;
+        }
+
+        this.isWaveDrawed = true;
+    }
+
+    private drawScaleDivision(x1: number, y1: number, x2: number, y2: number, context: CanvasRenderingContext2D): void {
+        context.beginPath();
+        context.strokeStyle = this.scalePlayedColor;
+        context.lineWidth = this.scaleDivisionWidth;
+        context.moveTo(x1, y1);
+        context.lineTo(x2, y2);
+        context.stroke();
     }
 }
+
+      // let channel0 = this.wave.channels[0];
+     // let topY = zero - (zero / (this.wave.topBound / frame.top));
+            // let bottomY = zero + (zero / (this.wave.bottomBound / frame.bottom));
