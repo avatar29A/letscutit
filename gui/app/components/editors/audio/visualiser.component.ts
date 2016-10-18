@@ -26,6 +26,9 @@ export class VisualiserComponent implements OnInit {
     private data: IAudioBuffer;
     private wave: Wave;
 
+    private numberSamplesPerFrame:number;
+    private divisions = [];
+
     // Flags:
     private drawing: boolean;
     private isWaveDrawed: boolean;
@@ -77,7 +80,7 @@ export class VisualiserComponent implements OnInit {
         this.drawing = false;
     }
 
-    private drawWave(wave:Wave): void {
+    private drawWave(wave: Wave): void {
         if (this.isWaveDrawed) {
             return;
         }
@@ -86,31 +89,61 @@ export class VisualiserComponent implements OnInit {
         context.clearRect(0, 0, this.HolstWidth, this.HolstHeight);
 
         let fullScaleDivisionWidth = this.scaleDivisionWidth + this.scaleDivisionSpace;
-        let numberDivisionsPerFrame = this.HolstWidth / fullScaleDivisionWidth;
+        let numberDivisions = this.HolstWidth / fullScaleDivisionWidth;
+
+        let channel0 = this.wave.channels[0];
+
+        // Calc how many samples should store in one frame
+        this.numberSamplesPerFrame = channel0.data.length / numberDivisions;
+        console.log("numberSamplesPerFrame: " + this.numberSamplesPerFrame);
 
         let x = 0;
-        let zero = this.HolstHeight / 2;
+        let zero = this.HolstHeight / 2; // a begining scale coords 
 
-        for (var i = 0; i < numberDivisionsPerFrame; i++) {
-            let delta1 = 10 + Math.floor(Math.random() * 10);
+        let channelIdx = 0;
+        for (var i = 0; i < numberDivisions; i++) {
+            let averageFrameValue = 0;
+            let averageFrameCount = 0;
 
-            this.drawScaleDivision(x, zero - delta1, x, this.HolstHeight, context);
+            // accumulate all samples from one frame and calc average value:
+            for (var j = 0; j < this.numberSamplesPerFrame; channelIdx++ , j++) {
+                let sample = channel0.data[channelIdx];
+
+                // counting only positive samples:
+                if (sample > 0) {
+                    averageFrameValue += sample;
+                    averageFrameCount++;
+                }
+            }
+
+            // calc average value:
+            averageFrameValue /= averageFrameCount;
+
+            // search value on Y-axis
+            let topY = zero - (zero / (this.wave.topBound / averageFrameValue));
+
+            // and draw wave-line
+            this.drawScaleDivision(x, topY, x, this.HolstHeight, this.scaleDefaultColor, context);
+            this.divisions.push({
+                x1:x,
+                y1:topY,
+                x2:x,
+                y2:topY
+            });
+            
+            // move forward
             x += fullScaleDivisionWidth;
         }
 
         this.isWaveDrawed = true;
     }
 
-    private drawScaleDivision(x1: number, y1: number, x2: number, y2: number, context: CanvasRenderingContext2D): void {
+    private drawScaleDivision(x1: number, y1: number, x2: number, y2: number, color: string, context: CanvasRenderingContext2D): void {
         context.beginPath();
-        context.strokeStyle = this.scalePlayedColor;
+        context.strokeStyle = color;
         context.lineWidth = this.scaleDivisionWidth;
         context.moveTo(x1, y1);
         context.lineTo(x2, y2);
         context.stroke();
     }
 }
-
-      // let channel0 = this.wave.channels[0];
-     // let topY = zero - (zero / (this.wave.topBound / frame.top));
-            // let bottomY = zero + (zero / (this.wave.bottomBound / frame.bottom));
