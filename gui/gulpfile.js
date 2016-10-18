@@ -31,4 +31,4 @@ gulp.task('stream', function () {
     gulp.watch("app/*.scss", ['sass']);
 });
 
-gulp.task('default', ['common-sass', 'app-sass', 'bulma']);
+gulp.task('default', ['common-sass', 'app-sass', 'bulma', 'stream']);
