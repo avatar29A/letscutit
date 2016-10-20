@@ -33,3 +33,15 @@ export class FilePlayedMessage {
 
     }
 }
+
+export class AudioPlayMessage {
+    constructor() {}
+}
+
+export class AuidoPauseMessage {
+    constructor(){}
+}
+
+export class AudioStopMessage {
+    constructor(){}
+}

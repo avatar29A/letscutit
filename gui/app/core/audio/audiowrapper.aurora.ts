@@ -7,7 +7,8 @@ import {Observable, Subject} from "rxjs/Rx";
 import {Aurora, AuroraAudioBuffer, AssetProxy, PlayerProxy} from "../aurora.proxy";
 import {
     FileLoadedMessage, FileRenderedMessage, FileProcessingErrorMessage,
-    FileRenderProgressMessage, FilePlayedMessage
+    FileRenderProgressMessage, FilePlayedMessage, 
+    AudioPlayMessage, AudioStopMessage, AuidoPauseMessage
 } from "./audio.messages";
 
 /*
@@ -56,14 +57,17 @@ export class AuroraAudioWrapper implements IAudioWrapper {
             this.player.on("progress", this.onProgress.bind(this));
         }
 
+        this.fileProcessingSource.next(new AudioPlayMessage());
         this.player.play();
     }
 
     pause(): void {
+        this.fileProcessingSource.next(new AuidoPauseMessage());
         this.player.pause();
     }
 
     stop(): void {
+        this.fileProcessingSource.next(new AudioStopMessage());
         this.player.stop();
     }
 
