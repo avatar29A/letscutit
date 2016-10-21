@@ -72,7 +72,7 @@ export class AudioEditorComponent {
 
         if (message instanceof FilePlayedMessage) {
             let playedMessage = <FilePlayedMessage>message;
-            this.visualiser.CurrentTime = playedMessage.currentTime;
+            this.visualiser.currentTime = playedMessage.currentTime;
         }
     }
 

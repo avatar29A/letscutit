@@ -6,6 +6,15 @@ import {Component, Input, Inject, OnInit} from "@angular/core";
 import {DOCUMENT} from '@angular/platform-browser';
 import {Wave} from "../../../core/audio/wave"
 import {IAudioBuffer} from "../../../core/audio/audiobuffer.abstract";
+import {PlayerState} from "../../../core/audio/playerstate"
+
+class Division {
+    constructor(public value:number,
+                public x1:number,
+                public y1:number,
+                public x2:number,
+                public y2:number) {}
+}
 
 @Component({
     selector: 'wave-visualiser',
@@ -27,7 +36,7 @@ export class VisualiserComponent implements OnInit {
     private wave: Wave;
 
     private numberSamplesPerFrame:number;
-    private divisions = [];
+    private divisions:Division[];
 
     // Flags:
     private drawing: boolean;
@@ -44,14 +53,17 @@ export class VisualiserComponent implements OnInit {
         this.hostCtx = this.host.getContext("2d");
     }
 
+    // buffer()
+    // Stores raw PCM data.
+    public get buffer(): IAudioBuffer {
+        return this.data;
+    }
+
     public set buffer(ab: IAudioBuffer) {
         this.data = ab;
         this.wave = new Wave(ab);
-        this.drawWave(this.wave);
-    }
-
-    public get buffer(): IAudioBuffer {
-        return this.data;
+        this.divisions = this.calculateAndMakeWaveFormDivisions(this.wave);
+        this.drawWave(this.divisions);
     }
 
     // When visualization needs to integrate with player, you can bind this property with
@@ -61,9 +73,27 @@ export class VisualiserComponent implements OnInit {
     private _currentTime: number = 0;
 
     @Input()
-    public set CurrentTime(value: number) {
+    public set currentTime(value: number) {
         this._currentTime = value;
-        this.redraw();
+    }
+
+    private _numberPlayedSamples:number;
+
+    public get numberPlayedSamples():number {
+        return this._numberPlayedSamples;
+    }
+
+    public set numberPlayedSamples(numberSamples:number) {
+        this._numberPlayedSamples = numberSamples;
+    }
+
+
+    // Presents player's state, need to waveform's animation.
+    private _playerState:PlayerState;
+
+    @Input()
+    public set PlayerState(state:PlayerState) {
+        this._playerState = state;
     }
 
     redraw(): void {
@@ -80,22 +110,24 @@ export class VisualiserComponent implements OnInit {
         this.drawing = false;
     }
 
-    private drawWave(wave: Wave): void {
-        if (this.isWaveDrawed) {
-            return;
-        }
+    animate():void {
 
-        let context = this.hostCtx;
-        context.clearRect(0, 0, this.HolstWidth, this.HolstHeight);
+    }
+
+    animateNextDivision():void {
+
+    }
+
+    private calculateAndMakeWaveFormDivisions(wave: Wave):Division[] {
+        let divisions:Division[] = [];
 
         let fullScaleDivisionWidth = this.scaleDivisionWidth + this.scaleDivisionSpace;
         let numberDivisions = this.HolstWidth / fullScaleDivisionWidth;
 
-        let channel0 = this.wave.channels[0];
+        let channel0 = wave.channels[0];
 
         // Calc how many samples should store in one frame
         this.numberSamplesPerFrame = channel0.data.length / numberDivisions;
-        console.log("numberSamplesPerFrame: " + this.numberSamplesPerFrame);
 
         let x = 0;
         let zero = this.HolstHeight / 2; // a begining scale coords 
@@ -123,16 +155,25 @@ export class VisualiserComponent implements OnInit {
             let topY = zero - (zero / (this.wave.topBound / averageFrameValue));
 
             // and draw wave-line
-            this.drawScaleDivision(x, topY, x, this.HolstHeight, this.scaleDefaultColor, context);
-            this.divisions.push({
-                x1:x,
-                y1:topY,
-                x2:x,
-                y2:topY
-            });
+            divisions.push(new Division(averageFrameValue, x, topY, x, this.HolstHeight));
             
             // move forward
             x += fullScaleDivisionWidth;
+        }
+
+        return divisions;
+    }
+
+    private drawWave(divisions: Division[]): void {
+        if (this.isWaveDrawed) {
+            return;
+        }
+
+        let context = this.hostCtx;
+        context.clearRect(0, 0, this.HolstWidth, this.HolstHeight);
+
+        for (let division of divisions) {
+            this.drawScaleDivision(division.x1, division.y1, division.x2, division.y2, this.scaleDefaultColor, context);
         }
 
         this.isWaveDrawed = true;
