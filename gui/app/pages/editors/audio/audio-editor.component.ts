@@ -9,7 +9,9 @@ import {IAudioBuffer} from "../../../core/audio/audiobuffer.abstract";
 import {BusyNotificationService} from "../../../services/app/appbusy-notification.service";
 
 import {audioWrapperFactory} from "../../../factories/audiowrapper.factory";
-import {FileRenderedMessage, FileRenderProgressMessage, FilePlayedMessage} from "../../../core/audio/audio.messages";
+import {FileRenderedMessage, FileRenderProgressMessage, FilePlayedMessage, 
+    AudioPlayMessage, AudioPauseMessage, AudioStopMessage} from "../../../core/audio/audio.messages";
+import {PlayerState} from "../../../core/audio/playerstate";
 
 
 enum EditorState {
@@ -73,6 +75,18 @@ export class AudioEditorComponent {
         if (message instanceof FilePlayedMessage) {
             let playedMessage = <FilePlayedMessage>message;
             this.visualiser.currentTime = playedMessage.currentTime;
+        }
+
+        if (message instanceof AudioPlayMessage) {
+            this.visualiser.PlayerState = PlayerState.Played;
+        }
+
+        if(message instanceof AudioPauseMessage) {
+            this.visualiser.PlayerState = PlayerState.Paused;
+        }
+
+        if (message instanceof AudioStopMessage) {
+            this.visualiser.PlayerState = PlayerState.Stopped;
         }
     }
 

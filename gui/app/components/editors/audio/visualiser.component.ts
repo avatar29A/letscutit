@@ -2,23 +2,22 @@
  * Created by Warlock on 02.10.2016.
  */
 
-import {Component, Input, Inject, OnInit} from "@angular/core";
-import {DOCUMENT} from '@angular/platform-browser';
+import {Component, Input, Inject, OnInit, ViewChild, ElementRef} from "@angular/core";
 import {Wave} from "../../../core/audio/wave"
 import {IAudioBuffer} from "../../../core/audio/audiobuffer.abstract";
 import {PlayerState} from "../../../core/audio/playerstate"
 
 class Division {
-    constructor(public value:number,
-                public x1:number,
-                public y1:number,
-                public x2:number,
-                public y2:number) {}
+    constructor(public value: number,
+        public x1: number,
+        public y1: number,
+        public x2: number,
+        public y2: number) { }
 }
 
 @Component({
     selector: 'wave-visualiser',
-    template: '<canvas id="holst" width="{{HolstWidth}}" height="{{HolstHeight}}"></canvas>'
+    template: '<canvas #holst width="{{HolstWidth}}" height="{{HolstHeight}}"></canvas>'
 })
 export class VisualiserComponent implements OnInit {
 
@@ -30,13 +29,16 @@ export class VisualiserComponent implements OnInit {
     private scaleDivisionWidth: number = 3;
     private scaleDivisionSpace: number = 1; // space between two scale divisions
 
-    private host: HTMLCanvasElement;
-    private hostCtx: CanvasRenderingContext2D;
+    @ViewChild("holst") holstRef: ElementRef;
+
+    private holstCtx: CanvasRenderingContext2D;
     private data: IAudioBuffer;
     private wave: Wave;
+    private holst: HTMLCanvasElement;
 
-    private numberSamplesPerFrame:number;
-    private divisions:Division[];
+    private numberSamplesPerFrame: number;
+    private numberSecondsPerFrame: number;
+    private divisions: Division[];
 
     // Flags:
     private drawing: boolean;
@@ -45,12 +47,23 @@ export class VisualiserComponent implements OnInit {
     @Input() HolstWidth: number = 750;
     @Input() HolstHeight: number = 60;
 
-    constructor( @Inject(DOCUMENT) private document: any) {
+    private _isPlayed: boolean = false;
+    private _animationTimer: number = null;
+
+    @Input() set isPlayed(value: boolean) {
+        if (value) {
+            this._animationTimer = setInterval(this.animate.bind(this), 100);
+        } else {
+            clearInterval(this._animationTimer);
+        }
+    }
+
+    constructor() {
     }
 
     ngOnInit(): void {
-        this.host = <HTMLCanvasElement>this.document.getElementById('holst');
-        this.hostCtx = this.host.getContext("2d");
+        this.holst = <HTMLCanvasElement>this.holstRef.nativeElement;
+        this.holstCtx = this.holst.getContext("2d");
     }
 
     // buffer()
@@ -77,23 +90,17 @@ export class VisualiserComponent implements OnInit {
         this._currentTime = value;
     }
 
-    private _numberPlayedSamples:number;
-
-    public get numberPlayedSamples():number {
-        return this._numberPlayedSamples;
-    }
-
-    public set numberPlayedSamples(numberSamples:number) {
-        this._numberPlayedSamples = numberSamples;
-    }
-
-
     // Presents player's state, need to waveform's animation.
-    private _playerState:PlayerState;
+    private _playerState: PlayerState;
 
     @Input()
-    public set PlayerState(state:PlayerState) {
+    public set PlayerState(state: PlayerState) {
         this._playerState = state;
+        if (state == PlayerState.Played) {
+            this._animationTimer = setInterval(this.animate.bind(this), 1000); //calculate!
+        } else {
+            clearInterval(this._animationTimer);
+        }
     }
 
     redraw(): void {
@@ -110,16 +117,29 @@ export class VisualiserComponent implements OnInit {
         this.drawing = false;
     }
 
-    animate():void {
+    private lastIdx = -1;
+    animate(): void {
+        let roundTime = Math.round(this._currentTime);
+        let currentIdx = Math.round(this._currentTime * this.numberSecondsPerFrame);
+        
+        // optimisation
+        if(this.lastIdx == currentIdx){
+            return;
+        }
+
+        while(this.lastIdx <= currentIdx) {
+            this.lastIdx += 1;
+            console.log(`Time: ${roundTime}; Idx: ${this.lastIdx} from ${this.divisions.length}; SecPerFrame: ${this.numberSecondsPerFrame}`);
+            this.drawScaleDivision(this.divisions[this.lastIdx], this.scalePlayedColor, this.holstCtx);
+        }
+    }
+
+    animateNextDivision(): void {
 
     }
 
-    animateNextDivision():void {
-
-    }
-
-    private calculateAndMakeWaveFormDivisions(wave: Wave):Division[] {
-        let divisions:Division[] = [];
+    private calculateAndMakeWaveFormDivisions(wave: Wave): Division[] {
+        let divisions: Division[] = [];
 
         let fullScaleDivisionWidth = this.scaleDivisionWidth + this.scaleDivisionSpace;
         let numberDivisions = this.HolstWidth / fullScaleDivisionWidth;
@@ -128,6 +148,7 @@ export class VisualiserComponent implements OnInit {
 
         // Calc how many samples should store in one frame
         this.numberSamplesPerFrame = channel0.data.length / numberDivisions;
+        this.numberSecondsPerFrame = this.numberSamplesPerFrame / wave.sampleRate;
 
         let x = 0;
         let zero = this.HolstHeight / 2; // a begining scale coords 
@@ -156,7 +177,7 @@ export class VisualiserComponent implements OnInit {
 
             // and draw wave-line
             divisions.push(new Division(averageFrameValue, x, topY, x, this.HolstHeight));
-            
+
             // move forward
             x += fullScaleDivisionWidth;
         }
@@ -169,22 +190,22 @@ export class VisualiserComponent implements OnInit {
             return;
         }
 
-        let context = this.hostCtx;
+        let context = this.holstCtx;
         context.clearRect(0, 0, this.HolstWidth, this.HolstHeight);
 
         for (let division of divisions) {
-            this.drawScaleDivision(division.x1, division.y1, division.x2, division.y2, this.scaleDefaultColor, context);
+            this.drawScaleDivision(division, this.scaleDefaultColor, context);
         }
 
         this.isWaveDrawed = true;
     }
 
-    private drawScaleDivision(x1: number, y1: number, x2: number, y2: number, color: string, context: CanvasRenderingContext2D): void {
+    private drawScaleDivision(division: Division, color: string, context: CanvasRenderingContext2D): void {
         context.beginPath();
         context.strokeStyle = color;
         context.lineWidth = this.scaleDivisionWidth;
-        context.moveTo(x1, y1);
-        context.lineTo(x2, y2);
+        context.moveTo(division.x1, division.y1);
+        context.lineTo(division.x2, division.y2);
         context.stroke();
     }
 }

@@ -50,7 +50,7 @@ export class AudioPlayMessage {
     constructor() {}
 }
 
-export class AuidoPauseMessage {
+export class AudioPauseMessage {
     // sends info about that an audio was paused.
     constructor(){}
 }

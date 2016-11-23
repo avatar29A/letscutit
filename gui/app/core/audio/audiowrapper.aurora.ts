@@ -8,8 +8,9 @@ import {Aurora, AuroraAudioBuffer, AssetProxy, PlayerProxy} from "../aurora.prox
 import {
     FileLoadedMessage, FileRenderedMessage, FileProcessingErrorMessage,
     FileRenderProgressMessage, FilePlayedMessage, 
-    AudioPlayMessage, AudioStopMessage, AuidoPauseMessage
+    AudioPlayMessage, AudioStopMessage, AudioPauseMessage
 } from "./audio.messages";
+
 
 /*
  AuroraAudioWrapper
@@ -62,7 +63,7 @@ export class AuroraAudioWrapper implements IAudioWrapper {
     }
 
     pause(): void {
-        this.fileProcessingSource.next(new AuidoPauseMessage());
+        this.fileProcessingSource.next(new AudioPauseMessage());
         this.player.pause();
     }
 
